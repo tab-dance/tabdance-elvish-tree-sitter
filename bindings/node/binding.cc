@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: 0BSD
 #include "tree_sitter/parser.h"
 #include <node.h>
 #include "nan.h"

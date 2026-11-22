@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: 0BSD
 try {
   module.exports = require("../../build/Release/tree_sitter_elvish_binding");
 } catch (error1) {

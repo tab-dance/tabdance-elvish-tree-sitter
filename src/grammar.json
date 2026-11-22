@@ -2670,8 +2670,15 @@
       "value": "\\s"
     },
     {
-      "type": "PATTERN",
-      "value": "\\^\\r?\\n"
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 2,
+        "content": {
+          "type": "PATTERN",
+          "value": "\\^\\r?\\n"
+        }
+      }
     },
     {
       "type": "SYMBOL",

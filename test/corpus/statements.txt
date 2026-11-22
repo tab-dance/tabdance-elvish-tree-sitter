@@ -399,6 +399,7 @@ Option variants
 echo a &flag
 echo a &flag=
 echo a &'a b'=1
+echo a &Ctrl-'['=1 &Alt-,=2 &q[0]=3
 echo a &x=1 y
 
 ---
@@ -422,6 +423,24 @@ echo a &x=1 y
     (option
       (option_key
         (string))
+      (number)))
+  (command
+    (identifier)
+    (bareword)
+    (option
+      (option_key
+        (identifier)
+        (string))
+      (number))
+    (option
+      (option_key
+        (bareword))
+      (number))
+    (option
+      (option_key
+        (identifier)
+        (indices
+          (number)))
       (number)))
   (command
     (identifier)
@@ -550,3 +569,26 @@ a | b &
       (identifier))
     (command
       (identifier))))
+
+===
+Line continuation
+===
+
+^
+nop a
+echo b | ^
+nop c
+
+---
+
+(source_file
+  (command
+    (identifier)
+    (bareword))
+  (pipeline
+    (command
+      (identifier)
+      (bareword))
+    (command
+      (identifier)
+      (bareword))))

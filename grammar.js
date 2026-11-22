@@ -11,7 +11,7 @@ module.exports = grammar({
 
   extras: $ => [
     /\s/,
-    /\^\r?\n/,
+    token(prec(2, /\^\r?\n/)),
     $.comment
   ],
 

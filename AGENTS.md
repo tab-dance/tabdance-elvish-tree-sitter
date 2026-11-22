@@ -16,7 +16,7 @@ Never hand-edit `src/parser.c`, `src/grammar.json`, or `src/node-types.json`; ed
 
 ## Commands
 
-There is no globally installed tree-sitter CLI in this environment. Install the pinned dev dependency first:
+Use the pinned dev dependency (or a globally installed tree-sitter CLI of the same major version):
 
 ```sh
 npm install          # installs tree-sitter-cli ^0.26.9
@@ -52,7 +52,7 @@ Test name
 The expected tree must match exactly, including whitespace in the source input. When adding a grammar feature:
 
 1. Add at least one corpus case.
-2. Run `tree-sitter generate`.
+2. Run `tree-sitter generate --abi 14`.
 3. Run `tree-sitter test` and fix either grammar or expectation.
 
 Hidden rules (names starting with `_`) do not appear in expected trees; look for their aliases instead (for example `_statements` appears as `chunk`).
@@ -64,7 +64,7 @@ Top level:
 - `source_file` allows leading separators and then optional `_statements`, so empty input parses.
 - `extras` is whitespace, comments, and the line continuation `^` followed by a newline, so these are permitted almost anywhere. The continuation is treated as inline whitespace and does not terminate a statement.
 - `word: $ => $.identifier` tells tree-sitter that `identifier` drives keyword extraction and error recovery.
-- `inline` lists `_statement`, `_expression`, `_literal`, `_string_like`, and `_terminator`, which collapse these wrapper nodes out of the tree.
+- `inline` lists `_statement`, `_expression`, `_literal`, `_string_like`, `_terminator`, and `_lhs_var`, which collapse these wrapper nodes out of the tree.
 - `_terminator` is `";"` or `"\n"`; statements are separated this way.
 - `_statements` requires at least one statement and allows trailing separators. Empty chunks are handled by the `chunk($)` helper, which allows leading separators and an optional `_statements` aliased to `chunk`.
 
@@ -84,10 +84,10 @@ Conventions used throughout:
 Feature-specific gotchas:
 
 - **Strings** are single tokens: single-quoted strings escape a quote by doubling it (`''`), double-quoted strings use backslash escapes. There is no interpolation node; `$name` inside a double-quoted string stays part of the `string` token.
-- **Lists vs maps** both start with `[`. An `[]` or positional list is `list`; a map requires at least one `&key=value` pair. Do not make `map` allow zero pairs or empty lists become ambiguous/misparsed.
-- **Lambdas vs braced lists**: `lambda` is `{` then either whitespace or a `|param|` list, then a `chunk`, then `}`. The `choice(/\s+/, $.parameter_list)` is deliberate so `{ nop }` and `{|a| nop}` both parse. Bare `{a b}` in expression position is `braced_list`.
+- **Lists vs maps** both start with `[`. A positional list is `list`; a map starts with `&` and may be empty (`[&]`) or contain pairs whose value is optional (`[&a]`, `[&a=]`). Do not make plain `[]` parse as a map.
+- **Lambdas vs braced lists**: `lambda` is `{` triggered by a `|param|` list, whitespace, or `;`, followed by an optional `chunk`, then `}`. This lets `{ nop }`, `{ |a| nop}`, `{|a| nop}`, and `{|| nop}` parse. Bare `{a b}` in expression position is `braced_list`.
 - **Redirection** wraps the `port>` form in a `token(...)` before aliasing to `io_port`. The inline comment in `grammar.js` explains this is required; aliasing a non-token breaks parsing. `io_port` is also used for `>&2`-style targets.
-- **Indexing** only applies to `variable`, `list`, `map`, and `output_capture`, and requires immediate `[`. Assignment indices (`set list[1] = ...`) are a separate `indices` alias on `lhs`.
+- **Indexing** applies to `variable`, `string`, `bareword`, `list`, `map`, captures, `braced_list`, and `lambda`, and requires immediate `[`. `head_indexing` handles `command[0]` command heads. Assignment indices (`set list[1] = ...`) are a separate `indices` alias on `lhs`.
 - **Comments**: the only comment form is `#` to end of line. The `injections.scm` query is a stub that captures comments.
 - **Multiple `elif`** is supported via `repeat($.elif)`; keep this when editing `if`.
 - **Lambda default values** use `parameter_option`, which requires a value after `=`. The grammar deliberately rejects `&opt=` (an empty default) because allowing it makes `&opt=value` ambiguously parse as an empty default followed by another parameter.

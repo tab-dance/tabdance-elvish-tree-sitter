@@ -174,3 +174,17 @@ nop [&] [&a] [&a=] [&a=1 &b]
       (pair
         (option_key
           (identifier))))))
+
+===
+Non-ASCII barewords
+===
+
+nop …’“” 日本語
+
+---
+
+(source_file
+  (command
+    (identifier)
+    (bareword)
+    (bareword)))
