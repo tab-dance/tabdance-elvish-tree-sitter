@@ -39,8 +39,11 @@
 
 (pipeline "|" @operator)
 (redirection [">" "<" ">>" "<>"] @operator)
+((redirection (io_port) @operator)
+ (#match? @operator "[<>]"))
 
-(io_port) @number
+((io_port) @number
+ (#match? @number "^[&]?[0-9-]+$"))
 
 (function_definition
   "fn" @keyword.function
@@ -67,9 +70,19 @@
 
 
 (number) @number
-(string) @string
+((string) @string
+ (#set! priority 90))
 
-(variable [(identifier) (string)] @variable)
+((option_key (identifier) @property)
+ (#set! priority 110))
+((option_key (string) @property)
+ (#set! priority 110))
+((option_key (bareword) @property)
+ (#set! priority 110))
+
+(variable (identifier) @variable)
+((variable (string) @variable)
+ (#set! priority 110))
 ((variable (identifier) @function)
   (#match? @function ".+\\~$"))
 ((variable (identifier) @boolean)
