@@ -393,6 +393,49 @@ echo a > 'a b'
       (file))))
 
 ===
+Compound left-hand side redirections
+===
+
+$fd> file
+(put 2)> file
+echo a $fd> file
+echo a (put 2)> file
+
+---
+
+(source_file
+  (command
+    head: (redirection
+      source: (variable
+        (identifier))
+      (file)))
+  (command
+    head: (redirection
+      source: (output_capture
+        (chunk
+          (command
+            head: (identifier)
+            argument: (number))))
+      (file)))
+  (command
+    head: (identifier)
+    argument: (bareword)
+    (redirection
+      source: (variable
+        (identifier))
+      (file)))
+  (command
+    head: (identifier)
+    argument: (bareword)
+    (redirection
+      source: (output_capture
+        (chunk
+          (command
+            head: (identifier)
+            argument: (number))))
+      (file))))
+
+===
 Option variants
 ===
 

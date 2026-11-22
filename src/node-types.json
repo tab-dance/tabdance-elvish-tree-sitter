@@ -258,6 +258,10 @@
             "named": true
           },
           {
+            "type": "redirection",
+            "named": true
+          },
+          {
             "type": "string",
             "named": true
           },
@@ -1300,7 +1304,66 @@
   {
     "type": "redirection",
     "named": true,
-    "fields": {},
+    "fields": {
+      "source": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "bareword",
+            "named": true
+          },
+          {
+            "type": "braced_list",
+            "named": true
+          },
+          {
+            "type": "compound",
+            "named": true
+          },
+          {
+            "type": "exception_capture",
+            "named": true
+          },
+          {
+            "type": "indexing",
+            "named": true
+          },
+          {
+            "type": "lambda",
+            "named": true
+          },
+          {
+            "type": "list",
+            "named": true
+          },
+          {
+            "type": "map",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
+            "type": "output_capture",
+            "named": true
+          },
+          {
+            "type": "string",
+            "named": true
+          },
+          {
+            "type": "variable",
+            "named": true
+          },
+          {
+            "type": "wildcard",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": true,
