@@ -22,7 +22,7 @@
 (import (bareword) @string.special)
 (import (string) @string.special)
 
-(wildcard ["*" "**" "?"] @string.special)
+(wildcard) @string.special
 
 (command argument: (bareword) @parameter)
 (command head: (bareword) @function)

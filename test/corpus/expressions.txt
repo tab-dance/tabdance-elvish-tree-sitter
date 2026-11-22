@@ -187,11 +187,16 @@ nop * ** ? *[set:aeoiu] *[set:abc][range:0-9]
     (wildcard)
     (wildcard)
     (wildcard)
-    (wildcard
-      (modifier))
-    (wildcard
-      (modifier)
-      (modifier))))
+    (indexing
+      (wildcard)
+      (indices
+        (bareword)))
+    (indexing
+      (wildcard)
+      (indices
+        (bareword))
+      (indices
+        (bareword)))))
 
 ===
 Empty chunks
