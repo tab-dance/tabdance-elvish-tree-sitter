@@ -8,16 +8,29 @@ $nop~ a
 nop &o=0
 
 ---
-(source_file
-  (command (identifier) (bareword))
-  (command (variable (identifier)) (bareword))
-  (command
-    (output_capture (chunk
-      (command (identifier) (variable (identifier)))))
-    (bareword))
-  (command (identifier)
-    (option (identifier) (number))))
 
+(source_file
+  (command
+    (identifier)
+    (bareword))
+  (command
+    (variable
+      (identifier))
+    (bareword))
+  (command
+    (output_capture
+      (chunk
+        (command
+          (identifier)
+          (variable
+            (identifier)))))
+    (bareword))
+  (command
+    (identifier)
+    (option
+      (option_key
+        (identifier))
+      (number))))
 
 ===
 Pipeline
@@ -26,12 +39,17 @@ Pipeline
 put a | put b | nop
 
 ---
+
 (source_file
   (pipeline
-    (command (identifier) (bareword))
-    (command (identifier) (bareword))
-    (command (identifier))))
-
+    (command
+      (identifier)
+      (bareword))
+    (command
+      (identifier)
+      (bareword))
+    (command
+      (identifier))))
 
 ===
 Redirection
@@ -45,18 +63,32 @@ bad 2>&1
 
 
 ---
-(source_file
-  (command (identifier) (bareword)
-    (redirection (file)))
-  (command (identifier)
-    (redirection (io_port)))
-  (command (identifier)
-    (redirection (io_port) (file)))
-  (command (identifier)
-    (redirection (io_port) (file)))
-  (command (identifier)
-    (redirection (io_port) (io_port))))
 
+(source_file
+  (command
+    (identifier)
+    (bareword)
+    (redirection
+      (file)))
+  (command
+    (identifier)
+    (redirection
+      (io_port)))
+  (command
+    (identifier)
+    (redirection
+      (io_port)
+      (file)))
+  (command
+    (identifier)
+    (redirection
+      (io_port)
+      (file)))
+  (command
+    (identifier)
+    (redirection
+      (io_port)
+      (io_port))))
 
 ===
 Conditional
@@ -73,12 +105,30 @@ if $false {
 }
 
 ---
-(source_file
-  (if (variable (identifier)) (chunk (command (identifier)))
-    (elif (variable (identifier)) (chunk (command (identifier))))
-    (elif (variable (identifier)) (chunk (command (identifier))))
-    (else (chunk (command (identifier))))))
 
+(source_file
+  (if
+    (variable
+      (identifier))
+    (chunk
+      (command
+        (identifier)))
+    (elif
+      (variable
+        (identifier))
+      (chunk
+        (command
+          (identifier))))
+    (elif
+      (variable
+        (identifier))
+      (chunk
+        (command
+          (identifier))))
+    (else
+      (chunk
+        (command
+          (identifier))))))
 
 ===
 While loop
@@ -91,10 +141,18 @@ while $true {
 }
 
 ---
-(source_file
-  (while (variable (identifier)) (chunk (command (identifier)))
-    (else (chunk (command (identifier))))))
 
+(source_file
+  (while
+    (variable
+      (identifier))
+    (chunk
+      (command
+        (identifier)))
+    (else
+      (chunk
+        (command
+          (identifier))))))
 
 ===
 For loop
@@ -107,11 +165,20 @@ for e [a b] {
 }
 
 ---
-(source_file 
-  (for (identifier) (list (bareword) (bareword))
-    (chunk (command (identifier)))
-    (else (chunk (command (identifier))))))
 
+(source_file
+  (for
+    (identifier)
+    (list
+      (bareword)
+      (bareword))
+    (chunk
+      (command
+        (identifier)))
+    (else
+      (chunk
+        (command
+          (identifier))))))
 
 ===
 Exception control
@@ -128,12 +195,25 @@ try {
 }
 
 ---
-(source_file
-  (try (chunk (command (identifier)))
-    (catch (identifier) (chunk (command (identifier))))
-    (else (chunk (command (identifier))))
-    (finally (chunk (command (identifier))))))
 
+(source_file
+  (try
+    (chunk
+      (command
+        (identifier)))
+    (catch
+      (identifier)
+      (chunk
+        (command
+          (identifier))))
+    (else
+      (chunk
+        (command
+          (identifier))))
+    (finally
+      (chunk
+        (command
+          (identifier))))))
 
 ===
 Imports
@@ -144,11 +224,15 @@ use a/b/c
 use a/b/c foo
 
 ---
-(source_file
-  (import (bareword))
-  (import (bareword))
-  (import (bareword) (bareword)))
 
+(source_file
+  (import
+    (bareword))
+  (import
+    (bareword))
+  (import
+    (bareword)
+    (bareword)))
 
 ===
 Function definition
@@ -157,10 +241,14 @@ Function definition
 fn f { nop }
 
 ---
-(source_file
-  (function_definition (identifier)
-    (lambda (chunk (command (identifier))))))
 
+(source_file
+  (function_definition
+    (identifier)
+    (lambda
+      (chunk
+        (command
+          (identifier))))))
 
 ===
 Variable delcaration/assigment
@@ -174,18 +262,291 @@ tmp y = bar
 del x
 
 ---
+
 (source_file
-  (variable_declaration (lhs (identifier)))
   (variable_declaration
-    (lhs (identifier) (identifier))
-    (rhs (bareword) (bareword)))
-  (variable_assignment
-    (lhs (identifier)) (rhs (bareword)))
-  (variable_assignment 
+    (lhs
+      (identifier)))
+  (variable_declaration
     (lhs
       (identifier)
-      (indices (number)))
-    (rhs (bareword)))
+      (identifier))
+    (rhs
+      (bareword)
+      (bareword)))
+  (variable_assignment
+    (lhs
+      (identifier))
+    (rhs
+      (bareword)))
+  (variable_assignment
+    (lhs
+      (identifier)
+      (indices
+        (number)))
+    (rhs
+      (bareword)))
   (temporary_assignment
-    (lhs (identifier)) (rhs (bareword)))
-  (variable_deletion (identifier)))
+    (lhs
+      (identifier))
+    (rhs
+      (bareword)))
+  (variable_deletion
+    (identifier)))
+
+===
+Command heads
+===
+
+./foo bar
+'echo' hi
+[echo] hi
+{ nop } hi
+foo[0] a
+
+---
+
+(source_file
+  (command
+    (bareword)
+    (bareword))
+  (command
+    (string)
+    (bareword))
+  (command
+    (list
+      (bareword))
+    (bareword))
+  (command
+    (lambda
+      (chunk
+        (command
+          (identifier))))
+    (bareword))
+  (command
+    (indexing
+      (identifier)
+      (indices
+        (number)))
+    (bareword)))
+
+===
+Redirection variants
+===
+
+echo a > x 2> y
+echo a 2>> x
+echo a 2<> x
+echo a 2< x
+echo a > $f
+echo a > (put f)
+echo a > 'a b'
+
+---
+
+(source_file
+  (command
+    (identifier)
+    (bareword)
+    (redirection
+      (file))
+    (redirection
+      (io_port)
+      (file)))
+  (command
+    (identifier)
+    (bareword)
+    (redirection
+      (io_port)
+      (file)))
+  (command
+    (identifier)
+    (bareword)
+    (redirection
+      (io_port)
+      (file)))
+  (command
+    (identifier)
+    (bareword)
+    (redirection
+      (io_port)
+      (file)))
+  (command
+    (identifier)
+    (bareword)
+    (redirection
+      (file
+        (identifier))))
+  (command
+    (identifier)
+    (bareword)
+    (redirection
+      (file
+        (chunk
+          (command
+            (identifier)
+            (bareword))))))
+  (command
+    (identifier)
+    (bareword)
+    (redirection
+      (file))))
+
+===
+Option variants
+===
+
+echo a &flag
+echo a &flag=
+echo a &'a b'=1
+echo a &x=1 y
+
+---
+
+(source_file
+  (command
+    (identifier)
+    (bareword)
+    (option
+      (option_key
+        (identifier))))
+  (command
+    (identifier)
+    (bareword)
+    (option
+      (option_key
+        (identifier))))
+  (command
+    (identifier)
+    (bareword)
+    (option
+      (option_key
+        (string))
+      (number)))
+  (command
+    (identifier)
+    (bareword)
+    (option
+      (option_key
+        (identifier))
+      (number))
+    (bareword)))
+
+===
+Empty blocks
+===
+
+if $true {
+}
+while $false {
+} else {
+}
+for e [] {
+}
+try {
+} catch e {
+} finally {
+}
+
+---
+
+(source_file
+  (if
+    (variable
+      (identifier)))
+  (while
+    (variable
+      (identifier))
+    (else))
+  (for
+    (identifier)
+    (list))
+  (try
+    (catch
+      (identifier))
+    (finally)))
+
+===
+Separators
+===
+
+; nop a;; nop b
+nop c;;
+
+---
+
+(source_file
+  (command
+    (identifier)
+    (bareword))
+  (command
+    (identifier)
+    (bareword))
+  (command
+    (identifier)
+    (bareword)))
+
+===
+Quoted names
+===
+
+var 'a b' = 1
+set 'a b' = 2
+del 'a b'
+nop $'a b' $"c d"
+
+---
+
+(source_file
+  (variable_declaration
+    (lhs
+      (string))
+    (rhs
+      (number)))
+  (variable_assignment
+    (lhs
+      (string))
+    (rhs
+      (number)))
+  (variable_deletion
+    (string))
+  (command
+    (identifier)
+    (variable
+      (string))
+    (variable
+      (string))))
+
+===
+Command-context barewords
+===
+
+a<b
+^ x
+
+---
+
+(source_file
+  (command
+    (bareword))
+  (command
+    (bareword)
+    (bareword)))
+
+===
+Background jobs
+===
+
+a &
+a | b &
+
+---
+
+(source_file
+  (command
+    (identifier))
+  (pipeline
+    (command
+      (identifier))
+    (command
+      (identifier))))

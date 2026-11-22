@@ -6,7 +6,7 @@
 //! ```
 //! let code = "";
 //! let mut parser = tree_sitter::Parser::new();
-//! parser.set_language(tree_sitter_elvish::language()).expect("Error loading elvish grammar");
+//! parser.set_language(&tree_sitter_elvish::language()).expect("Error loading elvish grammar");
 //! let tree = parser.parse(code, None).unwrap();
 //! ```
 //!
@@ -16,16 +16,20 @@
 //! [tree-sitter]: https://tree-sitter.github.io/
 
 use tree_sitter::Language;
+use tree_sitter_language::LanguageFn;
 
 extern "C" {
-    fn tree_sitter_elvish() -> Language;
+    fn tree_sitter_elvish() -> *const ();
 }
+
+/// The tree-sitter language function for this grammar.
+pub const LANGUAGE: LanguageFn = unsafe { LanguageFn::from_raw(tree_sitter_elvish) };
 
 /// Get the tree-sitter [Language][] for this grammar.
 ///
 /// [Language]: https://docs.rs/tree-sitter/*/tree_sitter/struct.Language.html
 pub fn language() -> Language {
-    unsafe { tree_sitter_elvish() }
+    LANGUAGE.into()
 }
 
 /// The content of the [`node-types.json`][] file for this grammar.
@@ -46,7 +50,7 @@ mod tests {
     fn test_can_load_grammar() {
         let mut parser = tree_sitter::Parser::new();
         parser
-            .set_language(super::language())
+            .set_language(&super::language())
             .expect("Error loading elvish language");
     }
 }

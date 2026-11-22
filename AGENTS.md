@@ -19,16 +19,16 @@ Never hand-edit `src/parser.c`, `src/grammar.json`, or `src/node-types.json`; ed
 There is no globally installed tree-sitter CLI in this environment. Install the pinned dev dependency first:
 
 ```sh
-npm install          # installs tree-sitter-cli ^0.20.6
+npm install          # installs tree-sitter-cli ^0.26.9
 npm test             # runs `tree-sitter test`
-npx tree-sitter generate   # regenerate src/parser.c, src/grammar.json, src/node-types.json
+npx tree-sitter generate --abi 14   # regenerate src/parser.c, src/grammar.json, src/node-types.json
 npx tree-sitter parse path/to/file.elv   # inspect an actual parse tree
 cargo test           # builds the Rust binding and runs its load/doc tests
 ```
 
 Notes:
 
-- `tree-sitter test` does **not** regenerate the parser. Run `tree-sitter generate` after any `grammar.js` change or tests will exercise stale output.
+- `tree-sitter test` does **not** regenerate the parser. Run `tree-sitter generate --abi 14` after any `grammar.js` change or tests will exercise stale output.
 - `cargo test` only verifies that the Rust binding compiles and can load the grammar. It does **not** run the corpus tests.
 - The Node binding is built from `binding.gyp` with `node-gyp` (there is no npm script for it); it depends on `nan`.
 - `Cargo.lock` and `target/` are created by cargo and are ignored via `.gitignore`. Do not add them to commits.
@@ -61,14 +61,14 @@ Hidden rules (names starting with `_`) do not appear in expected trees; look for
 
 Top level:
 
-- `source_file` is `optional($._statements)`, so empty input parses.
-- `extras` is whitespace plus `comment`, so comments are permitted almost anywhere.
+- `source_file` allows leading separators and then optional `_statements`, so empty input parses.
+- `extras` is whitespace, comments, and the line continuation `^` followed by a newline, so these are permitted almost anywhere. The continuation is treated as inline whitespace and does not terminate a statement.
 - `word: $ => $.identifier` tells tree-sitter that `identifier` drives keyword extraction and error recovery.
 - `inline` lists `_statement`, `_expression`, `_literal`, `_string_like`, and `_terminator`, which collapse these wrapper nodes out of the tree.
 - `_terminator` is `";"` or `"\n"`; statements are separated this way.
-- `_statements` uses `prec(1)` and requires at least one statement. It is always aliased to `chunk` inside braces and captures.
+- `_statements` requires at least one statement and allows trailing separators. Empty chunks are handled by the `chunk($)` helper, which allows leading separators and an optional `_statements` aliased to `chunk`.
 
-Statements (`_statement`) are: `command`, `if` (with `elif`/`else`), `while`, `for`, `try` (with `catch`/`else`/`finally`), `import`, `function_definition`, `variable_declaration`, `variable_assignment`, `temporary_assignment`, `variable_deletion`, `lambda`, and `pipeline`. Order matters for ambiguity resolution.
+Statements (`_statement`) are: `command`, `if` (with `elif`/`else`), `while`, `for`, `try` (with `catch`/`else`/`finally`), `import`, `function_definition`, `variable_declaration`, `variable_assignment`, `temporary_assignment`, `variable_deletion`, and `pipeline`. A bare lambda parses as a `command` whose head is a lambda. Order matters for ambiguity resolution.
 
 Expressions are literals, `variable`, `output_capture`, `exception_capture`, `braced_list`, `indexing`, `lambda`, and `wildcard`.
 
@@ -77,8 +77,8 @@ Conventions used throughout:
 - Use `field(...)` for semantically important children: `head`/`argument` on commands, `condition`, `var`/`container`, `exception`, `parameter`, `key`/`value`, `lhs`/`rhs`, `indices`, and `file`.
 - Use `alias(...)` to give externally meaningful names to inline constructs, e.g. `_statements` → `chunk`, `repeat1(...)` → `lhs`/`rhs`/`indices`, and `bareword` → `file` in redirections.
 - Use `token.immediate(...)` when a following `[` must not be preceded by whitespace (indexing and wildcard modifiers).
-- `identifier` is `/[\p{L}\p{N}_:~-]+/` (unicode letters/numbers plus `_ : ~ -`). Elvish namespaces and function markers like `edit:location` and `nop~` are single identifiers.
-- `bareword` is the separate token for unquoted arguments (`/usr/local/bin`, `a.txt`, `7of9`).
+- `identifier` allows letters/numbers, `_ : ~ -`, and any non-ASCII character, matching Elvish's rule that any printable non-ASCII rune is allowed. Elvish namespaces and function markers like `edit:location` and `nop~` are single identifiers.
+- `bareword` is the separate token for unquoted arguments (`/usr/local/bin`, `a.txt`, `7of9`) and also allows non-ASCII characters. `cmd_bareword` additionally allows `<`, `>`, `*`, and `^` in command position, matching Elvish's `CmdExpr` context.
 - Keywords (`if`, `else`, `var`, `fn`, ...) are literal strings in the grammar, not identifier aliases.
 
 Feature-specific gotchas:
@@ -90,11 +90,14 @@ Feature-specific gotchas:
 - **Indexing** only applies to `variable`, `list`, `map`, and `output_capture`, and requires immediate `[`. Assignment indices (`set list[1] = ...`) are a separate `indices` alias on `lhs`.
 - **Comments**: the only comment form is `#` to end of line. The `injections.scm` query is a stub that captures comments.
 - **Multiple `elif`** is supported via `repeat($.elif)`; keep this when editing `if`.
+- **Lambda default values** use `parameter_option`, which requires a value after `=`. The grammar deliberately rejects `&opt=` (an empty default) because allowing it makes `&opt=value` ambiguously parse as an empty default followed by another parameter.
+- **Option and map keys** use `option_key`, which supports concatenated primaries and indices (`&Ctrl-'['`, `&q[0]`, `&Alt-,`). The parts are lexed with `token.immediate`, so whitespace still separates keys from values.
+- **Compound concatenation is only modeled in keys**: adjacent primaries elsewhere (`$a'b'`, `foo$bar`) parse as separate expressions rather than one compound. This keeps whitespace-separated arguments unambiguous.
 
 ## Generated parser and version pinning
 
-- `src/parser.c` declares `LANGUAGE_VERSION 14`, which corresponds to tree-sitter 0.20. `Cargo.toml` pins `tree-sitter = "~0.20"`, and `package.json` pins `tree-sitter-cli` to `^0.20.6`.
-- Regenerating with a newer tree-sitter CLI can emit a different ABI and a different `src/tree_sitter/parser.h`, which may break the Rust/Node bindings. If you upgrade the CLI, update `Cargo.toml`, `package.json`, the generated files, and re-run `cargo test` together.
+- `src/parser.c` is generated with `--abi 14` (LANGUAGE_VERSION 14). `Cargo.toml` uses `tree-sitter = "0.26"` together with `tree-sitter-language = "0.1"`, and `package.json` pins `tree-sitter-cli` to `^0.26.9`.
+- The CLI's generated `src/tree_sitter/parser.h` (plus `alloc.h`/`array.h`) must stay in sync with the runtime used by the bindings. Regenerating with a different CLI can change the struct layout, so update `Cargo.toml`, `package.json`, the generated files, and `cargo test` together. Use `--abi 14` for compatibility with editor runtimes that have not adopted ABI 15.
 - There is no external scanner (`scanner.c`/`scanner.cc`). The commented blocks in `bindings/rust/build.rs` and `binding.gyp` are boilerplate for adding one.
 
 ## Queries
