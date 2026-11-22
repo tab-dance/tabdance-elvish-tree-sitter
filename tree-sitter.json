@@ -1,0 +1,34 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "elvish",
+      "camelcase": "Elvish",
+      "title": "Elvish",
+      "scope": "source.elvish",
+      "file-types": [
+        "elv"
+      ],
+      "highlights": "queries/highlights.scm",
+      "injections": "queries/injections.scm",
+      "injection-regex": "^elvish$",
+      "class-name": "TreeSitterElvish"
+    }
+  ],
+  "metadata": {
+    "version": "0.0.1",
+    "license": "0BSD",
+    "description": "Elvish grammar for tree-sitter",
+    "links": {
+      "repository": "https://github.com/tab-dance/tree-sitter-elvish"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": false,
+    "node": true,
+    "python": false,
+    "rust": true,
+    "swift": false
+  }
+}
