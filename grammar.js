@@ -20,6 +20,8 @@ module.exports = grammar({
   conflicts: $ => [
     [$.option],
     [$._command_body],
+    [$._assignment, $.indexing],
+    [$.variable_deletion, $.indexing],
   ],
 
 
@@ -214,7 +216,7 @@ module.exports = grammar({
     temporary_assignment: $ => seq("tmp", $._assignment),
 
     variable_deletion: $ => seq(
-      "del", repeat1(choice($.identifier, $.string))
+      "del", repeat1($._lhs_var)
     ),
 
     _assignment: $ => seq(
@@ -225,18 +227,21 @@ module.exports = grammar({
       ))
     ),
 
-    _lhs_var: $ => seq(
-      optional("@"),
-      choice($.identifier, $.string),
-      repeat(seq(
-        token.immediate("["),
-        alias(repeat1($._expression), $.indices),
-        "]"
-      ))
+    _lhs_var: $ => choice(
+      seq(
+        optional("@"),
+        choice($.identifier, $.string, $.variable),
+        repeat(seq(
+          token.immediate("["),
+          alias(repeat1($._expression), $.indices),
+          "]"
+        ))
+      ),
+      $._expression,
     ),
 
     function_definition: $ => seq(
-      "fn", choice($.identifier, $.string), $.lambda
+      "fn", field("name", choice($.identifier, $.string, $.bareword)), $.lambda
     ),
 
     if: $ => seq(
@@ -261,7 +266,7 @@ module.exports = grammar({
 
     for: $ => seq(
       "for",
-      field("var", $.identifier),
+      field("var", choice($.identifier, $.string, $.variable)),
       field("container", $._expression),
       "{", chunk($), "}",
       optional($.else),
@@ -269,12 +274,17 @@ module.exports = grammar({
 
     try: $ => seq(
       "try", "{", chunk($), "}",
-      optional(seq($.catch, optional($.else))),
+      optional(seq(choice($.catch, $.except), optional($.else))),
       optional($.finally),
     ),
 
     catch: $ => seq(
-      "catch", field("exception", $.identifier),
+      "catch", optional(field("exception", choice($.identifier, $.string, $.variable))),
+      "{", chunk($), "}"
+    ),
+
+    except: $ => seq(
+      "except", optional(field("exception", choice($.identifier, $.string, $.variable))),
       "{", chunk($), "}"
     ),
 
