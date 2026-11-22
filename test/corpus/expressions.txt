@@ -65,6 +65,24 @@ nop {a b} {}
     (braced_list)))
 
 ===
+Braced list with commas
+===
+
+nop {a,b} {a, b}
+
+---
+
+(source_file
+  (command
+    (identifier)
+    (braced_list
+      (bareword)
+      (bareword))
+    (braced_list
+      (bareword)
+      (bareword))))
+
+===
 Indexing
 ===
 

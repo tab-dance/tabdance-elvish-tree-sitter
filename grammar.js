@@ -112,7 +112,11 @@ module.exports = grammar({
     ),
     immediate_output_capture: $ => seq(token.immediate("("), chunk($), ")"),
     immediate_exception_capture: $ => seq(token.immediate("?("), chunk($), ")"),
-    immediate_braced_list: $ => seq(token.immediate("{"), repeat($._expression), "}"),
+    immediate_braced_list: $ => seq(
+      token.immediate("{"),
+      repeat(choice(",", $._braced_expression)),
+      "}"
+    ),
     immediate_lambda: $ => seq(
       token.immediate("{"),
       choice(
@@ -389,8 +393,73 @@ module.exports = grammar({
     )),
 
     braced_list: $ => seq(
-      "{", repeat($._expression), "}"
+      "{",
+      repeat(choice(",", $._braced_expression)),
+      "}"
     ),
+
+    _braced_expression: $ => choice(
+      alias($.braced_compound, $.compound),
+      alias($._braced_bareword, $.bareword),
+      $.string,
+      $.number,
+      $.variable,
+      $.output_capture,
+      $.exception_capture,
+      $.braced_list,
+      alias($.braced_indexing, $.indexing),
+      $.lambda,
+      $.wildcard,
+      $.list,
+      $.map,
+    ),
+
+    braced_compound: $ => prec.left(seq(
+      choice(
+        $.number,
+        $.string,
+        alias($._braced_bareword, $.bareword),
+        $.variable,
+        $.output_capture,
+        $.exception_capture,
+        $.braced_list,
+        $.lambda,
+        $.wildcard,
+        alias($.braced_indexing, $.indexing),
+      ),
+      repeat1(choice(
+        alias($.immediate_variable, $.variable),
+        alias($.immediate_output_capture, $.output_capture),
+        alias($.immediate_exception_capture, $.exception_capture),
+        alias($.immediate_braced_list, $.braced_list),
+        alias($.immediate_lambda, $.lambda),
+        alias($.immediate_wildcard, $.wildcard),
+        alias(token.immediate(seq("'", /([^']|'')*/, "'")), $.string),
+        alias(token.immediate(seq('"', /([^"\\]|\\.)*/, '"')), $.string),
+        alias(token.immediate(/(?:[\p{L}\p{N}!%+./:@\\_~=-]|[^\x00-\x7F])+/), $.bareword),
+      ))
+    )),
+
+    braced_indexing: $ => prec.left(seq(
+      choice(
+        $.variable,
+        $.string,
+        alias($._braced_bareword, $.bareword),
+        $.list,
+        $.map,
+        $.output_capture,
+        $.exception_capture,
+        $.braced_list,
+        $.lambda,
+      ),
+      repeat1(seq(
+        token.immediate("["),
+        alias(repeat1($._expression), $.indices),
+        "]"
+      )),
+    )),
+
+    _braced_bareword: $ => /(?:[\p{L}\p{N}!%+./:@\\_~=-]|[^\x00-\x7F])+/,
 
     output_capture: $ => seq(
       "(", chunk($), ")"
