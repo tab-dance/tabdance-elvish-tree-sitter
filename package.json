@@ -11,9 +11,14 @@
     "nan": "^2.12.1"
   },
   "devDependencies": {
-    "tree-sitter-cli": "^0.20.6"
+    "tree-sitter-cli": "^0.26.9"
   },
   "scripts": {
     "test": "tree-sitter test"
+  },
+  "license": "0BSD",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tab-dance/tree-sitter-elvish.git"
   }
 }

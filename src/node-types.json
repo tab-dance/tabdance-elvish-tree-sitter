@@ -75,7 +75,7 @@
     },
     "children": {
       "multiple": false,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "chunk",
@@ -110,10 +110,6 @@
         },
         {
           "type": "import",
-          "named": true
-        },
-        {
-          "type": "lambda",
           "named": true
         },
         {
@@ -188,10 +184,6 @@
             "named": true
           },
           {
-            "type": "option",
-            "named": true
-          },
-          {
             "type": "output_capture",
             "named": true
           },
@@ -214,75 +206,35 @@
         "required": true,
         "types": [
           {
-            "type": "!=",
-            "named": false
+            "type": "bareword",
+            "named": true
           },
           {
-            "type": "!=s",
-            "named": false
+            "type": "braced_list",
+            "named": true
           },
           {
-            "type": "%",
-            "named": false
-          },
-          {
-            "type": "*",
-            "named": false
-          },
-          {
-            "type": "+",
-            "named": false
-          },
-          {
-            "type": "-",
-            "named": false
-          },
-          {
-            "type": "/",
-            "named": false
-          },
-          {
-            "type": "<",
-            "named": false
-          },
-          {
-            "type": "<=",
-            "named": false
-          },
-          {
-            "type": "<=s",
-            "named": false
-          },
-          {
-            "type": "<s",
-            "named": false
-          },
-          {
-            "type": "==",
-            "named": false
-          },
-          {
-            "type": "==s",
-            "named": false
-          },
-          {
-            "type": ">",
-            "named": false
-          },
-          {
-            "type": ">=",
-            "named": false
-          },
-          {
-            "type": ">=s",
-            "named": false
-          },
-          {
-            "type": ">s",
-            "named": false
+            "type": "exception_capture",
+            "named": true
           },
           {
             "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "indexing",
+            "named": true
+          },
+          {
+            "type": "lambda",
+            "named": true
+          },
+          {
+            "type": "list",
+            "named": true
+          },
+          {
+            "type": "map",
             "named": true
           },
           {
@@ -290,16 +242,28 @@
             "named": true
           },
           {
+            "type": "string",
+            "named": true
+          },
+          {
             "type": "variable",
+            "named": true
+          },
+          {
+            "type": "wildcard",
             "named": true
           }
         ]
       }
     },
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "option",
+          "named": true
+        },
         {
           "type": "redirection",
           "named": true
@@ -368,7 +332,7 @@
     },
     "children": {
       "multiple": false,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "chunk",
@@ -383,7 +347,7 @@
     "fields": {},
     "children": {
       "multiple": false,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "chunk",
@@ -398,7 +362,7 @@
     "fields": {},
     "children": {
       "multiple": false,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "chunk",
@@ -413,7 +377,7 @@
     "fields": {},
     "children": {
       "multiple": false,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "chunk",
@@ -493,7 +457,7 @@
     },
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "chunk",
@@ -520,6 +484,10 @@
         },
         {
           "type": "lambda",
+          "named": true
+        },
+        {
+          "type": "string",
           "named": true
         }
       ]
@@ -586,7 +554,7 @@
     },
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "chunk",
@@ -616,7 +584,51 @@
           "named": true
         },
         {
+          "type": "braced_list",
+          "named": true
+        },
+        {
+          "type": "exception_capture",
+          "named": true
+        },
+        {
+          "type": "indexing",
+          "named": true
+        },
+        {
+          "type": "lambda",
+          "named": true
+        },
+        {
+          "type": "list",
+          "named": true
+        },
+        {
+          "type": "map",
+          "named": true
+        },
+        {
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "option",
+          "named": true
+        },
+        {
+          "type": "output_capture",
+          "named": true
+        },
+        {
           "type": "string",
+          "named": true
+        },
+        {
+          "type": "variable",
+          "named": true
+        },
+        {
+          "type": "wildcard",
           "named": true
         }
       ]
@@ -631,7 +643,27 @@
       "required": true,
       "types": [
         {
+          "type": "bareword",
+          "named": true
+        },
+        {
+          "type": "braced_list",
+          "named": true
+        },
+        {
+          "type": "exception_capture",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
           "type": "indices",
+          "named": true
+        },
+        {
+          "type": "lambda",
           "named": true
         },
         {
@@ -644,6 +676,10 @@
         },
         {
           "type": "output_capture",
+          "named": true
+        },
+        {
+          "type": "string",
           "named": true
         },
         {
@@ -718,7 +754,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "chunk",
@@ -745,6 +781,10 @@
         },
         {
           "type": "indices",
+          "named": true
+        },
+        {
+          "type": "string",
           "named": true
         }
       ]
@@ -815,7 +855,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "pair",
@@ -827,6 +867,76 @@
   {
     "type": "option",
     "named": true,
+    "fields": {
+      "key": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "option_key",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "bareword",
+            "named": true
+          },
+          {
+            "type": "braced_list",
+            "named": true
+          },
+          {
+            "type": "exception_capture",
+            "named": true
+          },
+          {
+            "type": "indexing",
+            "named": true
+          },
+          {
+            "type": "lambda",
+            "named": true
+          },
+          {
+            "type": "list",
+            "named": true
+          },
+          {
+            "type": "map",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
+            "type": "output_capture",
+            "named": true
+          },
+          {
+            "type": "string",
+            "named": true
+          },
+          {
+            "type": "variable",
+            "named": true
+          },
+          {
+            "type": "wildcard",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "option_key",
+    "named": true,
     "fields": {},
     "children": {
       "multiple": true,
@@ -837,51 +947,15 @@
           "named": true
         },
         {
-          "type": "braced_list",
-          "named": true
-        },
-        {
-          "type": "exception_capture",
-          "named": true
-        },
-        {
           "type": "identifier",
           "named": true
         },
         {
-          "type": "indexing",
-          "named": true
-        },
-        {
-          "type": "lambda",
-          "named": true
-        },
-        {
-          "type": "list",
-          "named": true
-        },
-        {
-          "type": "map",
-          "named": true
-        },
-        {
-          "type": "number",
-          "named": true
-        },
-        {
-          "type": "output_capture",
+          "type": "indices",
           "named": true
         },
         {
           "type": "string",
-          "named": true
-        },
-        {
-          "type": "variable",
-          "named": true
-        },
-        {
-          "type": "wildcard",
           "named": true
         }
       ]
@@ -893,7 +967,7 @@
     "fields": {},
     "children": {
       "multiple": false,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "chunk",
@@ -911,14 +985,14 @@
         "required": true,
         "types": [
           {
-            "type": "identifier",
+            "type": "option_key",
             "named": true
           }
         ]
       },
       "value": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "bareword",
@@ -978,11 +1052,15 @@
     "fields": {
       "parameter": {
         "multiple": true,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "@",
             "named": false
+          },
+          {
+            "type": "bareword",
+            "named": true
           },
           {
             "type": "identifier",
@@ -990,6 +1068,10 @@
           },
           {
             "type": "option",
+            "named": true
+          },
+          {
+            "type": "string",
             "named": true
           }
         ]
@@ -1092,6 +1174,7 @@
   {
     "type": "source_file",
     "named": true,
+    "root": true,
     "fields": {},
     "children": {
       "multiple": true,
@@ -1115,10 +1198,6 @@
         },
         {
           "type": "import",
-          "named": true
-        },
-        {
-          "type": "lambda",
           "named": true
         },
         {
@@ -1177,7 +1256,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "catch",
@@ -1208,6 +1287,10 @@
       "types": [
         {
           "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "string",
           "named": true
         }
       ]
@@ -1261,6 +1344,10 @@
       "types": [
         {
           "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "string",
           "named": true
         }
       ]
@@ -1327,7 +1414,7 @@
     },
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "chunk",
@@ -1360,19 +1447,7 @@
     "named": false
   },
   {
-    "type": "!=",
-    "named": false
-  },
-  {
-    "type": "!=s",
-    "named": false
-  },
-  {
     "type": "$",
-    "named": false
-  },
-  {
-    "type": "%",
     "named": false
   },
   {
@@ -1396,18 +1471,6 @@
     "named": false
   },
   {
-    "type": "+",
-    "named": false
-  },
-  {
-    "type": "-",
-    "named": false
-  },
-  {
-    "type": "/",
-    "named": false
-  },
-  {
     "type": ";",
     "named": false
   },
@@ -1416,19 +1479,7 @@
     "named": false
   },
   {
-    "type": "<=",
-    "named": false
-  },
-  {
-    "type": "<=s",
-    "named": false
-  },
-  {
     "type": "<>",
-    "named": false
-  },
-  {
-    "type": "<s",
     "named": false
   },
   {
@@ -1436,31 +1487,11 @@
     "named": false
   },
   {
-    "type": "==",
-    "named": false
-  },
-  {
-    "type": "==s",
-    "named": false
-  },
-  {
     "type": ">",
     "named": false
   },
   {
-    "type": ">=",
-    "named": false
-  },
-  {
-    "type": ">=s",
-    "named": false
-  },
-  {
     "type": ">>",
-    "named": false
-  },
-  {
-    "type": ">s",
     "named": false
   },
   {
@@ -1493,7 +1524,8 @@
   },
   {
     "type": "comment",
-    "named": true
+    "named": true,
+    "extra": true
   },
   {
     "type": "del",
@@ -1506,10 +1538,6 @@
   {
     "type": "else",
     "named": false
-  },
-  {
-    "type": "file",
-    "named": true
   },
   {
     "type": "finally",

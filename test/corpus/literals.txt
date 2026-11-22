@@ -7,11 +7,20 @@ nop "my name is $name" "quoted \" test"
 nop "double escape \\" ""
 
 ---
-(source_file
-  (command (identifier) (string) (string))
-  (command (identifier) (string) (string))
-  (command (identifier) (string) (string)))
 
+(source_file
+  (command
+    (identifier)
+    (string)
+    (string))
+  (command
+    (identifier)
+    (string)
+    (string))
+  (command
+    (identifier)
+    (string)
+    (string)))
 
 ===
 Barewords
@@ -20,6 +29,7 @@ Barewords
 nop a.txt long-bareword elf@elv.sh /usr/local/bin 7of9
 
 ---
+
 (source_file
   (command
     (identifier)
@@ -29,7 +39,6 @@ nop a.txt long-bareword elf@elv.sh /usr/local/bin 7of9
     (bareword)
     (bareword)))
 
-
 ===
 Integers
 ===
@@ -37,6 +46,7 @@ Integers
 nop 10 0xaAbBcC_eE_fF 0o1_2_3 0b10_10 1_000_000
 
 ---
+
 (source_file
   (command
     (identifier)
@@ -45,7 +55,6 @@ nop 10 0xaAbBcC_eE_fF 0o1_2_3 0b10_10 1_000_000
     (number)
     (number)
     (number)))
-
 
 ===
 Rationals
@@ -54,12 +63,12 @@ Rationals
 nop 1/2 0x10/100
 
 ---
+
 (source_file
   (command
     (identifier)
     (number)
     (number)))
-
 
 ===
 Floats
@@ -68,6 +77,7 @@ Floats
 nop 10.0 .1 10. 1e1 1.234_567e-1_2_3 Inf NaN
 
 ---
+
 (source_file
   (command
     (identifier)
@@ -78,7 +88,6 @@ nop 10.0 .1 10. 1e1 1.234_567e-1_2_3 Inf NaN
     (number)
     (number)
     (number)))
-
 
 ===
 Lists
@@ -90,14 +99,19 @@ nop [] [[]] [a b] [
   ]
 
 ---
+
 (source_file
   (command
     (identifier)
     (list)
-    (list (list))
-    (list (bareword) (bareword))
-    (list (bareword) (bareword))))
-
+    (list
+      (list))
+    (list
+      (bareword)
+      (bareword))
+    (list
+      (bareword)
+      (bareword))))
 
 ===
 Maps
@@ -109,12 +123,68 @@ nop [&foo=bar &lorem = ipsum] [
   ]
 
 ---
+
 (source_file
   (command
     (identifier)
     (map
-      (pair (identifier) (bareword))
-      (pair (identifier) (bareword)))
+      (pair
+        (option_key
+          (identifier))
+        (bareword))
+      (pair
+        (option_key
+          (identifier))
+        (bareword)))
     (map
-      (pair (identifier) (bareword))
-      (pair (identifier) (bareword)))))
+      (pair
+        (option_key
+          (identifier))
+        (bareword))
+      (pair
+        (option_key
+          (identifier))
+        (bareword)))))
+
+===
+Maps with optional values
+===
+
+nop [&] [&a] [&a=] [&a=1 &b]
+
+---
+
+(source_file
+  (command
+    (identifier)
+    (map)
+    (map
+      (pair
+        (option_key
+          (identifier))))
+    (map
+      (pair
+        (option_key
+          (identifier))))
+    (map
+      (pair
+        (option_key
+          (identifier))
+        (number))
+      (pair
+        (option_key
+          (identifier))))))
+
+===
+Non-ASCII barewords
+===
+
+nop …’“” 日本語
+
+---
+
+(source_file
+  (command
+    (identifier)
+    (bareword)
+    (bareword)))

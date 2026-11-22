@@ -19,10 +19,12 @@
 
 (import "use" @include)
 (import (bareword) @string.special)
+(import (string) @string.special)
 
 (wildcard ["*" "**" "?"] @string.special)
 
 (command argument: (bareword) @parameter)
+(command head: (bareword) @function)
 (command head: (identifier) @function)
 ((command head: (identifier) @keyword.return)
  (#eq? @keyword.return "return"))
@@ -41,32 +43,32 @@
 
 (function_definition
   "fn" @keyword.function
-  (identifier) @function)
+  [(identifier) (string)] @function)
 
 (parameter_list) @parameter
 (parameter_list "|" @punctuation.bracket)
 
 (variable_declaration
   "var" @keyword
-  (lhs (identifier) @variable))
+  (lhs [(identifier) (string)] @variable))
 
 (variable_assignment
   "set" @keyword
-  (lhs (identifier) @variable))
+  (lhs [(identifier) (string)] @variable))
 
 (temporary_assignment
   "tmp" @keyword
-  (lhs (identifier) @variable))
+  (lhs [(identifier) (string)] @variable))
 
 (variable_deletion
   "del" @keyword
-  (identifier) @variable)
+  [(identifier) (string)] @variable)
 
 
 (number) @number
 (string) @string
 
-(variable (identifier) @variable)
+(variable [(identifier) (string)] @variable)
 ((variable (identifier) @function)
   (#match? @function ".+\\~$"))
 ((variable (identifier) @boolean)
