@@ -152,6 +152,7 @@ module.exports = grammar({
 
     _command_body: $ => seq(
       field("head", choice(
+        $.redirection,
         alias($.head_indexing, $.indexing),
         $.identifier,
         $.bareword,
@@ -193,16 +194,20 @@ module.exports = grammar({
         seq(port, token.immediate(">")),
         seq(port, token.immediate("<")),
       )
-      return seq(
-        choice(
-          ">", "<", ">>", "<>",
-          // Why do I have to wrap this in a token?
-          alias(token(portRedir), $.io_port),
-        ),
-        choice(
-          alias($._expression, $.file),
-          alias(token(seq(optional("&"), port)), $.io_port)
-        )
+      const op = choice(">", "<", ">>", "<>");
+      const immediateOp = choice(
+        token.immediate(">"),
+        token.immediate("<"),
+        token.immediate(">>"),
+        token.immediate("<>"),
+      );
+      const target = choice(
+        alias($._expression, $.file),
+        alias(token(seq(optional("&"), port)), $.io_port)
+      );
+      return choice(
+        prec(1, seq(field("source", $._expression), immediateOp, target)),
+        seq(choice(op, alias(token(portRedir), $.io_port)), target),
       )
     },
 
