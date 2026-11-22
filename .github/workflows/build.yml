@@ -15,10 +15,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
 
       - name: Install Node dependencies
-        run: npm install
+        run: npm install --ignore-scripts
+
+      - name: Install tree-sitter CLI binary
+        working-directory: node_modules/tree-sitter-cli
+        run: node install.js
 
       - name: Verify parser generation is up to date
         run: |
@@ -34,6 +38,12 @@ jobs:
 
       - name: Validate tree-sitter queries
         run: node scripts/check-queries.mjs
+
+      - name: Build Node binding
+        run: npx node-gyp rebuild
+
+      - name: Test Node binding
+        run: npm run test:node
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
