@@ -821,6 +821,10 @@
         {
           "type": "variable",
           "named": true
+        },
+        {
+          "type": "wildcard",
+          "named": true
         }
       ]
     }
@@ -1694,17 +1698,7 @@
   {
     "type": "wildcard",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "modifier",
-          "named": true
-        }
-      ]
-    }
+    "fields": {}
   },
   {
     "type": "\n",
@@ -1724,14 +1718,6 @@
   },
   {
     "type": ")",
-    "named": false
-  },
-  {
-    "type": "*",
-    "named": false
-  },
-  {
-    "type": "**",
     "named": false
   },
   {

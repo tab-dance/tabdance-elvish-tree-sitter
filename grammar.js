@@ -126,14 +126,7 @@ module.exports = grammar({
       chunk($),
       "}"
     ),
-    immediate_wildcard: $ => prec.left(seq(
-      token.immediate(choice("*", "**", "?")),
-      repeat(seq(
-        token.immediate("["),
-        alias($._expression, $.modifier),
-        "]"
-      ))
-    )),
+    immediate_wildcard: $ => token.immediate(choice("*", "**", "?")),
 
     _literal: $ => choice(
       $.number,
@@ -384,6 +377,7 @@ module.exports = grammar({
         $.exception_capture,
         $.braced_list,
         $.lambda,
+        $.wildcard,
       ),
       repeat1(seq(
         token.immediate("["),
@@ -451,6 +445,7 @@ module.exports = grammar({
         $.exception_capture,
         $.braced_list,
         $.lambda,
+        $.wildcard,
       ),
       repeat1(seq(
         token.immediate("["),
@@ -515,14 +510,10 @@ module.exports = grammar({
       /(?:[\p{L}\p{N}!%+,./:@\\_~=<>*^-]|[^\x00-\x7F])*/
     ))),
 
-    wildcard: $ => prec.left(seq(
-      choice("*", "**", "?"),
-      repeat(seq(
-        token.immediate("["),
-        alias($._expression, $.modifier),
-        "]"
-      ))
-    )),
+    wildcard: $ => choice(
+      token(prec(2, choice("*", "**"))),
+      token(prec(-1, "?")),
+    ),
 
     list: $ => seq("[", repeat($._expression), "]"),
 
