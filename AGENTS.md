@@ -83,7 +83,7 @@ Conventions used throughout:
 
 Feature-specific gotchas:
 
-- **Strings** are single tokens: single-quoted strings escape a quote by doubling it (`''`), double-quoted strings use backslash escapes. There is no interpolation node; `$name` inside a double-quoted string stays part of the `string` token.
+- **Strings** are single tokens: single-quoted strings escape a quote by doubling it (`''`), double-quoted strings use backslash escapes. There is no interpolation node; `$name` inside a double-quoted string stays part of the `string` token. Adjacent string/variable/bareword primaries form a `compound` expression.
 - **Lists vs maps** both start with `[`. A positional list is `list`; a map starts with `&` and may be empty (`[&]`) or contain pairs whose value is optional (`[&a]`, `[&a=]`). Do not make plain `[]` parse as a map.
 - **Lambdas vs braced lists**: `lambda` is `{` triggered by a `|param|` list, whitespace, or `;`, followed by an optional `chunk`, then `}`. This lets `{ nop }`, `{ |a| nop}`, `{|a| nop}`, and `{|| nop}` parse. Bare `{a b}` in expression position is `braced_list`.
 - **Redirection** wraps the `port>` form in a `token(...)` before aliasing to `io_port`. The inline comment in `grammar.js` explains this is required; aliasing a non-token breaks parsing. `io_port` is also used for `>&2`-style targets.
@@ -92,7 +92,7 @@ Feature-specific gotchas:
 - **Multiple `elif`** is supported via `repeat($.elif)`; keep this when editing `if`.
 - **Lambda default values** use `parameter_option`, which requires a value after `=`. The grammar deliberately rejects `&opt=` (an empty default) because allowing it makes `&opt=value` ambiguously parse as an empty default followed by another parameter.
 - **Option and map keys** use `option_key`, which supports concatenated primaries and indices (`&Ctrl-'['`, `&q[0]`, `&Alt-,`). The parts are lexed with `token.immediate`, so whitespace still separates keys from values.
-- **Compound concatenation is only modeled in keys**: adjacent primaries elsewhere (`$a'b'`, `foo$bar`) parse as separate expressions rather than one compound. This keeps whitespace-separated arguments unambiguous.
+- **Compound concatenation**: adjacent primaries in general expression positions parse as a `compound` node (`$a'b'`, `$dir'/'$name`, `$fname" is a Go file"`). Parts after the first are lexed with `token.immediate(...)` so whitespace still separates arguments. `option_key` continues to model the same adjacency rule for option and map keys.
 
 ## Generated parser and version pinning
 

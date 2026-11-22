@@ -63,6 +63,7 @@ module.exports = grammar({
     ),
 
     _expression: $ => choice(
+      $.compound,
       $._literal,
       $.variable,
       $.output_capture,
@@ -72,6 +73,61 @@ module.exports = grammar({
       $.lambda,
       $.wildcard
     ),
+
+    compound: $ => prec.left(seq(
+      choice(
+        $.number,
+        $._string_like,
+        $.variable,
+        $.output_capture,
+        $.exception_capture,
+        $.braced_list,
+        $.lambda,
+        $.wildcard,
+        $.indexing,
+      ),
+      repeat1(choice(
+        alias($.immediate_variable, $.variable),
+        alias($.immediate_output_capture, $.output_capture),
+        alias($.immediate_exception_capture, $.exception_capture),
+        alias($.immediate_braced_list, $.braced_list),
+        alias($.immediate_lambda, $.lambda),
+        alias($.immediate_wildcard, $.wildcard),
+        alias(token.immediate(seq("'", /([^']|'')*/, "'")), $.string),
+        alias(token.immediate(seq('"', /([^"\\]|\\.)*/, '"')), $.string),
+        alias(token.immediate(/(?:[\p{L}\p{N}!%+,./:@\\_~=-]|[^\x00-\x7F])+/), $.bareword),
+      ))
+    )),
+
+    immediate_variable: $ => seq(
+      token.immediate("$"),
+      optional(token.immediate("@")),
+      choice(
+        alias(token.immediate(/(?:[\p{L}\p{N}_:~-]|[^\x00-\x7F])+/), $.identifier),
+        alias(token.immediate(seq("'", /([^']|'')*/, "'")), $.string),
+        alias(token.immediate(seq('"', /([^"\\]|\\.)*/, '"')), $.string),
+      )
+    ),
+    immediate_output_capture: $ => seq(token.immediate("("), chunk($), ")"),
+    immediate_exception_capture: $ => seq(token.immediate("?("), chunk($), ")"),
+    immediate_braced_list: $ => seq(token.immediate("{"), repeat($._expression), "}"),
+    immediate_lambda: $ => seq(
+      token.immediate("{"),
+      choice(
+        $.parameter_list,
+        seq(choice(/\s+/, ";"), optional($.parameter_list)),
+      ),
+      chunk($),
+      "}"
+    ),
+    immediate_wildcard: $ => prec.left(seq(
+      token.immediate(choice("*", "**", "?")),
+      repeat(seq(
+        token.immediate("["),
+        alias($._expression, $.modifier),
+        "]"
+      ))
+    )),
 
     _literal: $ => choice(
       $.number,
@@ -303,7 +359,7 @@ module.exports = grammar({
       ))
     ),
 
-    indexing: $ => seq(
+    indexing: $ => prec.left(seq(
       choice(
         $.variable,
         $.string,
@@ -320,7 +376,7 @@ module.exports = grammar({
         alias(repeat1($._expression), $.indices),
         "]"
       )),
-    ),
+    )),
 
     braced_list: $ => seq(
       "{", repeat($._expression), "}"
@@ -380,14 +436,14 @@ module.exports = grammar({
       /(?:[\p{L}\p{N}!%+,./:@\\_~=<>*^-]|[^\x00-\x7F])*/
     ))),
 
-    wildcard: $ => seq(
+    wildcard: $ => prec.left(seq(
       choice("*", "**", "?"),
       repeat(seq(
         token.immediate("["),
         alias($._expression, $.modifier),
         "]"
       ))
-    ),
+    )),
 
     list: $ => seq("[", repeat($._expression), "]"),
 

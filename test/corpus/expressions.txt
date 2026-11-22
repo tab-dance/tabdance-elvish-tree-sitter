@@ -244,3 +244,43 @@ nop {|| } {|@rest| } {|&o=0 x| nop}
       (chunk
         (command
           (identifier))))))
+
+===
+Compound expressions
+===
+
+var bin = $dst-dir/$os'-'$arch
+echo $fname" is a Go file"
+echo $a[0]'b'
+
+---
+
+(source_file
+  (variable_declaration
+    (lhs
+      (identifier))
+    (rhs
+      (compound
+        (variable
+          (identifier))
+        (bareword)
+        (variable
+          (identifier))
+        (string)
+        (variable
+          (identifier)))))
+  (command
+    (identifier)
+    (compound
+      (variable
+        (identifier))
+      (string)))
+  (command
+    (identifier)
+    (compound
+      (indexing
+        (variable
+          (identifier))
+        (indices
+          (number)))
+      (string))))
