@@ -309,19 +309,46 @@ module.exports = grammar({
 
     parameter_list: $ => seq(
       "|",
-      repeat(field(
-        "parameter",
-        choice(
-          alias($.parameter_option, $.option),
-          alias(token(prec(1, seq("@", /(?:[\p{L}\p{N}_:~-]|[^\x00-\x7F])+/))), $.identifier),
+      repeat(field("parameter", $._normal_parameter)),
+      optional(seq(
+        // After an option with an empty default value (`&o=`) the next
+        // expression (possibly after whitespace, as in `&o= x`) is the
+        // option's value, not a parameter, so plain parameters are only
+        // allowed again after a valued option or a rest parameter.
+        field("parameter", alias($._parameter_option_empty, $.option)),
+        repeat(choice(
+          field("parameter", alias($._parameter_option_empty, $.option)),
           seq(
-            optional("@"),
-            choice($.identifier, $.bareword, $.string)
-          ),
-        )
+            field("parameter", choice(
+              alias($.parameter_option, $.option),
+              $._rest_parameter,
+            )),
+            repeat(field("parameter", $._plain_parameter_after_option)),
+          )
+        ))
       )),
       "|"
     ),
+
+    _normal_parameter: $ => choice(
+      alias($.parameter_option, $.option),
+      $._plain_parameter,
+    ),
+
+    _plain_parameter: $ => choice(
+      alias(token(prec(1, seq("@", /(?:[\p{L}\p{N}_:~-]|[^\x00-\x7F])+/))), $.identifier),
+      seq(
+        optional("@"),
+        choice($.identifier, $.bareword, $.string)
+      ),
+    ),
+
+    _plain_parameter_after_option: $ => seq(
+      optional("@"),
+      choice($.identifier, $.bareword, $.string)
+    ),
+
+    _rest_parameter: $ => alias(token(prec(1, seq("@", /(?:[\p{L}\p{N}_:~-]|[^\x00-\x7F])+/))), $.identifier),
 
     parameter_option: $ => choice(
       prec(1, seq(
@@ -331,6 +358,12 @@ module.exports = grammar({
         field("value", $._expression)
       )),
       seq("&", field("key", $.option_key))
+    ),
+
+    _parameter_option_empty: $ => seq(
+      "&",
+      field("key", $.option_key),
+      token(prec(1, "="))
     ),
 
     option_key: $ => seq(

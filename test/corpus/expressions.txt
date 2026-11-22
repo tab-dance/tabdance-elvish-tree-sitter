@@ -307,3 +307,73 @@ echo $a[0]'b'
         (indices
           (number)))
       (string))))
+
+===
+Lambda option empty defaults
+===
+
+nop {|&o=|nop} {|&o= |nop} {|&o= x|nop} {|&o= &p=|nop} {|&o= &p=1 x|nop} {|&o= @r|nop}
+
+---
+
+(source_file
+  (command
+    (identifier)
+    (lambda
+      (parameter_list
+        (option
+          (option_key
+            (identifier))))
+      (chunk
+        (command
+          (identifier))))
+    (lambda
+      (parameter_list
+        (option
+          (option_key
+            (identifier))))
+      (chunk
+        (command
+          (identifier))))
+    (lambda
+      (parameter_list
+        (option
+          (option_key
+            (identifier))
+          (bareword)))
+      (chunk
+        (command
+          (identifier))))
+    (lambda
+      (parameter_list
+        (option
+          (option_key
+            (identifier)))
+        (option
+          (option_key
+            (identifier))))
+      (chunk
+        (command
+          (identifier))))
+    (lambda
+      (parameter_list
+        (option
+          (option_key
+            (identifier)))
+        (option
+          (option_key
+            (identifier))
+          (number))
+        (identifier))
+      (chunk
+        (command
+          (identifier))))
+    (lambda
+      (parameter_list
+        (option
+          (option_key
+            (identifier)))
+        (identifier))
+      (chunk
+        (command
+          (identifier))))))

@@ -90,7 +90,7 @@ Feature-specific gotchas:
 - **Indexing** applies to `variable`, `string`, `bareword`, `list`, `map`, captures, `braced_list`, and `lambda`, and requires immediate `[`. `head_indexing` handles `command[0]` command heads. Assignment indices (`set list[1] = ...`) are a separate `indices` alias on `lhs`.
 - **Comments**: the only comment form is `#` to end of line. The `injections.scm` query is a stub that captures comments.
 - **Multiple `elif`** is supported via `repeat($.elif)`; keep this when editing `if`.
-- **Lambda default values** use `parameter_option`, which requires a value after `=`. The grammar deliberately rejects `&opt=` (an empty default) because allowing it makes `&opt=value` ambiguously parse as an empty default followed by another parameter.
+- **Lambda default values**: `parameter_option` requires a value after `=`, and a separate hidden rule `_parameter_option_empty` accepts the empty default `&opt=`. Because Elvish reads the next expression after `&opt=` as the option's value (whitespace allowed, as in `&opt= x`), an empty default may only be followed by more options or a rest parameter; `parameter_list` enforces this with a small inline state machine (see the comment there).
 - **Option and map keys** use `option_key`, which supports concatenated primaries and indices (`&Ctrl-'['`, `&q[0]`, `&Alt-,`). The parts are lexed with `token.immediate`, so whitespace still separates keys from values.
 - **Compound concatenation**: adjacent primaries in general expression positions parse as a `compound` node (`$a'b'`, `$dir'/'$name`, `$fname" is a Go file"`). Parts after the first are lexed with `token.immediate(...)` so whitespace still separates arguments. `option_key` continues to model the same adjacency rule for option and map keys.
 
