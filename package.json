@@ -3,18 +3,33 @@
   "version": "0.0.1",
   "description": "elvish grammar for tree-sitter",
   "main": "bindings/node",
+  "types": "bindings/node",
   "keywords": [
     "parsing",
-    "incremental"
+    "incremental",
+    "elvish",
+    "tree-sitter"
+  ],
+  "files": [
+    "grammar.js",
+    "binding.gyp",
+    "prebuilds/**",
+    "bindings/node/*",
+    "queries/*",
+    "src/**"
   ],
   "dependencies": {
-    "nan": "^2.12.1"
+    "node-addon-api": "^8.3.1",
+    "node-gyp-build": "^4.8.4"
   },
   "devDependencies": {
+    "tree-sitter": "^0.25.0",
     "tree-sitter-cli": "^0.26.9"
   },
   "scripts": {
-    "test": "tree-sitter test"
+    "install": "node-gyp-build",
+    "test": "tree-sitter test",
+    "test:node": "node --test bindings/node/binding_test.js"
   },
   "license": "0BSD",
   "repository": {
