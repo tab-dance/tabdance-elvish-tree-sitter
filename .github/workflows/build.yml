@@ -32,6 +32,9 @@ jobs:
       - name: Run tree-sitter tests
         run: npx tree-sitter test
 
+      - name: Validate tree-sitter queries
+        run: node scripts/check-queries.mjs
+
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
         with:
