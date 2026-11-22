@@ -14,6 +14,7 @@
 
 (try "try" @exception)
 (try (catch "catch" @exception))
+(try (except "except" @exception))
 (try (else "else" @exception))
 (try (finally "finally" @exception))
 
@@ -43,7 +44,7 @@
 
 (function_definition
   "fn" @keyword.function
-  [(identifier) (string)] @function)
+  name: [(identifier) (string) (bareword)] @function)
 
 (parameter_list) @parameter
 (parameter_list "|" @punctuation.bracket)

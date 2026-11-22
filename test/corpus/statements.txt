@@ -592,3 +592,121 @@ nop c
     (command
       (identifier)
       (bareword))))
+
+===
+Variable declaration without equals
+===
+
+var listing:binding { }
+var a
+var a b
+
+---
+
+(source_file
+  (variable_declaration
+    (lhs
+      (identifier)
+      (lambda)))
+  (variable_declaration
+    (lhs
+      (identifier)))
+  (variable_declaration
+    (lhs
+      (identifier)
+      (identifier))))
+
+===
+For loop with variable name
+===
+
+for $x [a] { nop }
+
+---
+
+(source_file
+  (for
+    (variable
+      (identifier))
+    (list
+      (bareword))
+    (chunk
+      (command
+        (identifier)))))
+
+===
+Del with index
+===
+
+del x[0]
+del $x[0]
+
+---
+
+(source_file
+  (variable_deletion
+    (identifier)
+    (indices
+      (number)))
+  (variable_deletion
+    (variable
+      (identifier))
+    (indices
+      (number))))
+
+===
+Try catch with variable exception
+===
+
+try { nop } catch $e { nop }
+
+---
+
+(source_file
+  (try
+    (chunk
+      (command
+        (identifier)))
+    (catch
+      (variable
+        (identifier))
+      (chunk
+        (command
+          (identifier))))))
+
+===
+Try except
+===
+
+try { nop } except e { nop }
+
+---
+
+(source_file
+  (try
+    (chunk
+      (command
+        (identifier)))
+    (except
+      (identifier)
+      (chunk
+        (command
+          (identifier))))))
+
+===
+Function definition with bareword name
+===
+
+fn + {|@num| nop }
+
+---
+
+(source_file
+  (function_definition
+    (bareword)
+    (lambda
+      (parameter_list
+        (identifier))
+      (chunk
+        (command
+          (identifier))))))
