@@ -23,3 +23,15 @@ test("exposes node type info", () => {
   assert.ok(Array.isArray(elvish.nodeTypeInfo));
   assert.ok(elvish.nodeTypeInfo.length > 0);
 });
+
+test("parses empty braced list elements", () => {
+  const parser = new Parser();
+  parser.setLanguage(elvish);
+  const tree = parser.parse("put {a,,b}\n");
+  assert.equal(tree.rootNode.hasError, false);
+  const bracedList = tree.rootNode.firstChild.childForFieldName("argument");
+  assert.deepEqual(
+    bracedList.namedChildren.map((child) => child.type),
+    ["bareword", "empty_element", "bareword"],
+  );
+});

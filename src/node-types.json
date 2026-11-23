@@ -5,7 +5,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "bareword",
@@ -17,6 +17,10 @@
         },
         {
           "type": "compound",
+          "named": true
+        },
+        {
+          "type": "empty_element",
           "named": true
         },
         {
@@ -1855,6 +1859,10 @@
   {
     "type": "else",
     "named": false
+  },
+  {
+    "type": "empty_element",
+    "named": true
   },
   {
     "type": "except",

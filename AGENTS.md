@@ -87,7 +87,8 @@ Feature-specific gotchas:
 
 - **Strings** are single tokens: single-quoted strings escape a quote by doubling it (`''`), double-quoted strings use backslash escapes. There is no interpolation node; `$name` inside a double-quoted string stays part of the `string` token. Adjacent string/variable/bareword primaries form a `compound` expression.
 - **Lists vs maps** both start with `[`. A positional list is `list`; a map starts with `&` and may be empty (`[&]`) or contain pairs whose value is optional (`[&a]`, `[&a=]`). Do not make plain `[]` parse as a map.
-- **Lambdas vs braced lists**: `lambda` is `{` triggered by a `|param|` list, whitespace, or `;`, followed by an optional `chunk`, then `}`. This lets `{ nop }`, `{ |a| nop}`, `{|a| nop}`, and `{|| nop}` parse. Bare `{a b}` in expression position is `braced_list`.
+- **Lambdas vs braced lists**: `lambda` is `{` triggered by a `|param|` list, whitespace, or `;`, followed by an optional `chunk`, then `}`. This lets `{ nop }`, `{ |a| nop}`, `{|a| nop}`, and `{|| nop}` parse. Bare `{a b}` in expression position is `braced_list`. Because whitespace immediately after `{` starts a lambda, `{ a , b }` is a lambda while `{a , b}` is a braced list.
+- **Empty braced elements**: segments separated by commas are split further on whitespace, and empty segments become `empty_element` nodes (`{a,,b}`, `{,a}`, `{a,}`, `{,}`, and even `{}` all contain `empty_element` nodes). Zero-width elements require the external scanner.
 - **Redirection** wraps the `port>` form in a `token(...)` before aliasing to `io_port`. The inline comment in `grammar.js` explains this is required; aliasing a non-token breaks parsing. `io_port` is also used for `>&2`-style targets.
 - **Indexing** applies to `variable`, `string`, `bareword`, `list`, `map`, captures, `braced_list`, and `lambda`, and requires immediate `[`. `head_indexing` handles `command[0]` command heads. Assignment indices (`set list[1] = ...`) are a separate `indices` alias on `lhs`.
 - **Comments**: the only comment form is `#` to end of line. The `injections.scm` query is a stub that captures comments.
@@ -100,7 +101,7 @@ Feature-specific gotchas:
 
 - `src/parser.c` is generated with `--abi 14` (LANGUAGE_VERSION 14). `Cargo.toml` uses `tree-sitter = "0.26"` together with `tree-sitter-language = "0.1"`, and `package.json` pins `tree-sitter-cli` to `^0.26.9`.
 - The CLI's generated `src/tree_sitter/parser.h` (plus `alloc.h`/`array.h`) must stay in sync with the runtime used by the bindings. Regenerating with a different CLI can change the struct layout, so update `Cargo.toml`, `package.json`, the generated files, and `cargo test` together. Use `--abi 14` for compatibility with editor runtimes that have not adopted ABI 15.
-- There is no external scanner (`scanner.c`/`scanner.cc`). The commented blocks in `bindings/rust/build.rs` and `binding.gyp` are boilerplate for adding one.
+- `src/scanner.c` is the external scanner. It emits two zero-width tokens that both appear as `empty_element`: one for an empty first segment (no leading whitespace allowed, so `{ }` stays a lambda) and one for an empty segment after a comma (which skips extras). It is compiled by `bindings/rust/build.rs` and listed in `binding.gyp`.
 
 ## Queries
 

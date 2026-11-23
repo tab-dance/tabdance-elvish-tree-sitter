@@ -15,6 +15,11 @@ module.exports = grammar({
     $.comment
   ],
 
+  externals: $ => [
+    $.empty_element,
+    $._empty_element_after_comma,
+  ],
+
   word: $ => $.identifier,
 
   conflicts: $ => [
@@ -114,7 +119,8 @@ module.exports = grammar({
     immediate_exception_capture: $ => seq(token.immediate("?("), chunk($), ")"),
     immediate_braced_list: $ => seq(
       token.immediate("{"),
-      repeat(choice(",", $._braced_expression)),
+      $._braced_first_segment,
+      repeat(seq(",", $._braced_rest_segment)),
       "}"
     ),
     immediate_lambda: $ => seq(
@@ -426,8 +432,19 @@ module.exports = grammar({
 
     braced_list: $ => seq(
       "{",
-      repeat(choice(",", $._braced_expression)),
+      $._braced_first_segment,
+      repeat(seq(",", $._braced_rest_segment)),
       "}"
+    ),
+
+    _braced_first_segment: $ => choice(
+      repeat1($._braced_expression),
+      $.empty_element,
+    ),
+
+    _braced_rest_segment: $ => choice(
+      repeat1($._braced_expression),
+      alias($._empty_element_after_comma, $.empty_element),
     ),
 
     _braced_expression: $ => choice(
