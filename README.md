@@ -76,8 +76,11 @@ Add languages to `languages.toml` and copy queries into Helix's runtime:
 [[language]]
 name = "elvish"
 scope = "source.elvish"
+shebangs = ["elvish"]
 file-types = ["elv"]
 comment-token = "#"
+indent = { tab-width = 2, unit = "  " }
+language-servers = ["elvish"]
 grammar = "elvish"
 
 [[language]]
