@@ -62,7 +62,8 @@ nop {a b} {}
     (braced_list
       (bareword)
       (bareword))
-    (braced_list)))
+    (braced_list
+      (empty_element))))
 
 ===
 Braced list with commas
@@ -81,6 +82,91 @@ nop {a,b} {a, b}
     (braced_list
       (bareword)
       (bareword))))
+
+===
+Braced list with empty elements
+===
+
+put {a,,b} {,a} {a,} {,} {}
+
+---
+
+(source_file
+  (command
+    (identifier)
+    (braced_list
+      (bareword)
+      (empty_element)
+      (bareword))
+    (braced_list
+      (empty_element)
+      (bareword))
+    (braced_list
+      (bareword)
+      (empty_element))
+    (braced_list
+      (empty_element)
+      (empty_element))
+    (braced_list
+      (empty_element))))
+
+===
+Braced list empty elements with whitespace
+===
+
+put {a, } {a, ,b} {, a}
+
+---
+
+(source_file
+  (command
+    (identifier)
+    (braced_list
+      (bareword)
+      (empty_element))
+    (braced_list
+      (bareword)
+      (empty_element)
+      (bareword))
+    (braced_list
+      (empty_element)
+      (bareword))))
+
+===
+Braced list versus lambda with spaces around commas
+===
+
+put {a , b} { a , b }
+
+---
+
+(source_file
+  (command
+    (identifier)
+    (braced_list
+      (bareword)
+      (bareword))
+    (lambda
+      (chunk
+        (command
+          (identifier)
+          (bareword)
+          (bareword))))))
+
+===
+Empty braced list versus empty lambda
+===
+
+put {} { }
+
+---
+
+(source_file
+  (command
+    (identifier)
+    (braced_list
+      (empty_element))
+    (lambda)))
 
 ===
 Indexing
