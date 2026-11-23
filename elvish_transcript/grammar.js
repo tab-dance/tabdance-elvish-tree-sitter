@@ -51,7 +51,7 @@ module.exports = grammar({
       /\r?\n/,
     ),
 
-    code: $ => token(/[^\r\n]+/),
+    code: $ => token.immediate(/[^\r\n]+/),
 
     output: $ => $._output_line,
   },
