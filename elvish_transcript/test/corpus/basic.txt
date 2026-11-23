@@ -1,0 +1,80 @@
+===
+Simple interaction
+===
+
+~> echo foo
+foo
+
+---
+
+(source_file
+  (interaction
+    (prompt_line
+      (prompt)
+      (code)))
+  (output))
+
+===
+Continuation
+===
+
+~> echo lorem
+   echo ipsum
+lorem
+ipsum
+
+---
+
+(source_file
+  (interaction
+    (prompt_line
+      (prompt)
+      (code))
+    (continuation_line
+      (continuation_prefix)
+      (code)))
+  (output)
+  (output))
+
+===
+Headings and directives
+===
+
+//each:in-temp-dir
+
+# h1 #
+
+## h2 ##
+
+~> put x
+▶ x
+
+---
+
+(source_file
+  (directive)
+  (heading)
+  (heading)
+  (interaction
+    (prompt_line
+      (prompt)
+      (code)))
+  (output))
+
+===
+Comments
+===
+
+// comment
+////
+~> true
+
+---
+
+(source_file
+  (comment)
+  (comment)
+  (interaction
+    (prompt_line
+      (prompt)
+      (code))))

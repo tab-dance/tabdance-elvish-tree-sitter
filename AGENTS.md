@@ -4,40 +4,39 @@ Guidance for agents working on the Elvish grammar for tree-sitter.
 
 ## Overview
 
-This repository is a **tree-sitter grammar**, not a general application:
+This repository contains **two tree-sitter grammars**:
 
-- `grammar.js` is the source of truth for the language definition.
-- `tree-sitter.json` describes the grammar's scope, file types, and queries for newer tree-sitter tooling; `package.json` carries the equivalent metadata for older consumers.
-- `src/parser.c`, `src/grammar.json`, and `src/node-types.json` are **generated** from `grammar.js` and are committed to the repo.
-- `queries/` contains editor-facing syntax highlighting and injection queries that reference node names from the grammar.
-- `bindings/node/` and `bindings/rust/` are thin wrappers that expose the generated C parser to Node and Rust consumers.
-- `test/corpus/` contains the tree-sitter test corpus and is the primary behavioral test suite.
+- `elvish/grammar.js` defines Elvish (`source.elvish`, `.elv`).
+- `elvish_transcript/grammar.js` defines Elvish transcript tests (`source.elvish-transcript`, `.elvts`).
+- `elvish/src/*` and `elvish_transcript/src/*` parser files are **generated** and committed.
+- `elvish/queries/` and `elvish_transcript/queries/` contain editor-facing highlighting/injection queries.
+- `bindings/node/` and `bindings/rust/` expose both grammars.
+- `elvish/test/corpus/` and `elvish_transcript/test/corpus/` are the primary behavioral test suites.
 
-Never hand-edit `src/parser.c`, `src/grammar.json`, or `src/node-types.json`; edit `grammar.js` and regenerate.
+Never hand-edit generated parser files; edit the relevant `grammar.js` and regenerate with `--abi 14` into that grammar's `src/` directory.
 
 ## Commands
 
-Use the pinned dev dependency (or a globally installed tree-sitter CLI of the same major version):
-
 ```sh
-npm install          # installs tree-sitter-cli ^0.26.9
-npm test             # runs `tree-sitter test`
-npm run check:metadata  # verifies version, license, repository, and grammar metadata stay in sync
-npx tree-sitter generate --abi 14   # regenerate src/parser.c, src/grammar.json, src/node-types.json
-npx tree-sitter parse path/to/file.elv   # inspect an actual parse tree
-cargo test           # builds the Rust binding and runs its load/doc tests
+npm install
+npm test             # builds both grammars and runs corpus tests
+npx tree-sitter generate --abi 14 elvish/grammar.js -o elvish/src
+npx tree-sitter generate --abi 14 elvish_transcript/grammar.js -o elvish_transcript/src
+npm run check:metadata
+npm run check:queries
+npm run test:node
+cargo test
 ```
 
 Notes:
 
-- `tree-sitter test` does **not** regenerate the parser. Run `tree-sitter generate --abi 14` after any `grammar.js` change or tests will exercise stale output.
-- `cargo test` only verifies that the Rust binding compiles and can load the grammar. It does **not** run the corpus tests.
-- The Node binding is built from `binding.gyp` with `node-gyp` (there is no npm script for it); it depends on `nan`.
-- `Cargo.lock` and `target/` are created by cargo and are ignored via `.gitignore`. Do not add them to commits.
+- Regenerate after any `grammar.js` or scanner change; `tree-sitter test` does not regenerate.
+- `cargo test` verifies Rust bindings can load both grammars; it does not run corpus tests.
+- `Cargo.lock` and `target/` are ignored.
 
 ## Test corpus
 
-Tests live in `test/corpus/*.txt` grouped by feature (`expressions`, `literals`, `statements`). Each test is:
+Elvish tests live in `elvish/test/corpus/*.txt`; transcript tests in `elvish_transcript/test/corpus/*.txt`. Each test is:
 
 ```
 ===
@@ -54,8 +53,8 @@ Test name
 The expected tree must match exactly, including whitespace in the source input. When adding a grammar feature:
 
 1. Add at least one corpus case.
-2. Run `tree-sitter generate --abi 14`.
-3. Run `tree-sitter test` and fix either grammar or expectation.
+2. Run `tree-sitter generate --abi 14 <grammar>/grammar.js -o <grammar>/src`.
+3. Run `npm test` and fix either grammar or expectation.
 
 Hidden rules (names starting with `_`) do not appear in expected trees; look for their aliases instead (for example `_statements` appears as `chunk`).
 
@@ -99,7 +98,7 @@ Feature-specific gotchas:
 
 ## Generated parser and version pinning
 
-- `src/parser.c` is generated with `--abi 14` (LANGUAGE_VERSION 14). `Cargo.toml` uses `tree-sitter = "0.26"` together with `tree-sitter-language = "0.1"`, and `package.json` pins `tree-sitter-cli` to `^0.26.9`.
+- Generated parsers use `--abi 14`. `Cargo.toml` uses `tree-sitter-language = "0.1"` and dev-depends on `tree-sitter = "0.26"`; `package.json` pins `tree-sitter-cli` to `^0.26.9`.
 - The CLI's generated `src/tree_sitter/parser.h` (plus `alloc.h`/`array.h`) must stay in sync with the runtime used by the bindings. Regenerating with a different CLI can change the struct layout, so update `Cargo.toml`, `package.json`, the generated files, and `cargo test` together. Use `--abi 14` for compatibility with editor runtimes that have not adopted ABI 15.
 - `src/scanner.c` is the external scanner. It emits two zero-width tokens that both appear as `empty_element`: one for an empty first segment (no leading whitespace allowed, so `{ }` stays a lambda) and one for an empty segment after a comma (which skips extras). It is compiled by `bindings/rust/build.rs` and listed in `binding.gyp`.
 
