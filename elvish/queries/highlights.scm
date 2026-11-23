@@ -2,6 +2,7 @@
 ;; SPDX-FileCopyrightText: 2022 Tobias Frilling
 
 (comment) @comment
+(string) @string
 
 (if "if" @conditional)
 (if (elif "elif" @conditional))
@@ -70,19 +71,13 @@
 
 
 (number) @number
-((string) @string
- (#set! priority 90))
 
-((option_key (identifier) @property)
- (#set! priority 110))
-((option_key (string) @property)
- (#set! priority 110))
-((option_key (bareword) @property)
- (#set! priority 110))
+(option_key (identifier) @property)
+(option_key (string) @property)
+(option_key (bareword) @property)
 
 (variable (identifier) @variable)
-((variable (string) @variable)
- (#set! priority 110))
+(variable (string) @variable)
 ((variable (identifier) @function)
   (#match? @function ".+\\~$"))
 ((variable (identifier) @boolean)
