@@ -7,6 +7,7 @@ Guidance for agents working on the Elvish grammar for tree-sitter.
 This repository is a **tree-sitter grammar**, not a general application:
 
 - `grammar.js` is the source of truth for the language definition.
+- `tree-sitter.json` describes the grammar's scope, file types, and queries for newer tree-sitter tooling; `package.json` carries the equivalent metadata for older consumers.
 - `src/parser.c`, `src/grammar.json`, and `src/node-types.json` are **generated** from `grammar.js` and are committed to the repo.
 - `queries/` contains editor-facing syntax highlighting and injection queries that reference node names from the grammar.
 - `bindings/node/` and `bindings/rust/` are thin wrappers that expose the generated C parser to Node and Rust consumers.
@@ -21,6 +22,7 @@ Use the pinned dev dependency (or a globally installed tree-sitter CLI of the sa
 ```sh
 npm install          # installs tree-sitter-cli ^0.26.9
 npm test             # runs `tree-sitter test`
+npm run check:metadata  # verifies version, license, repository, and grammar metadata stay in sync
 npx tree-sitter generate --abi 14   # regenerate src/parser.c, src/grammar.json, src/node-types.json
 npx tree-sitter parse path/to/file.elv   # inspect an actual parse tree
 cargo test           # builds the Rust binding and runs its load/doc tests
