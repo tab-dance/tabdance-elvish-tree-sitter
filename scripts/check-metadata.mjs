@@ -14,9 +14,7 @@ function read(relative) {
 
 function cargoString(manifest, key) {
   const match = manifest.match(new RegExp(`^${key}\\s*=\\s*"([^"]*)"`, "m"));
-  if (!match) {
-    throw new Error(`Cargo.toml is missing \`${key}\``);
-  }
+  if (!match) throw new Error(`Cargo.toml is missing \`${key}\``);
   return match[1];
 }
 
@@ -51,17 +49,26 @@ for (const [field, values] of checks) {
   }
 }
 
-const legacy = pkg["tree-sitter"]?.[0];
-const grammar = config.grammars?.[0];
-if (!legacy) {
-  errors.push('package.json is missing the "tree-sitter" metadata block');
-} else if (!grammar) {
-  errors.push("tree-sitter.json is missing grammar metadata");
-} else {
+const legacy = pkg["tree-sitter"] || [];
+const grammars = config.grammars || [];
+if (legacy.length !== grammars.length) {
+  errors.push(`grammar count differs: package.json has ${legacy.length}, tree-sitter.json has ${grammars.length}`);
+}
+
+for (let i = 0; i < grammars.length; i++) {
+  const g = grammars[i];
+  const l = legacy[i];
+  if (!l) {
+    errors.push(`package.json missing grammar metadata for ${g.name}`);
+    continue;
+  }
   for (const field of ["scope", "file-types", "highlights", "injections", "injection-regex"]) {
-    if (JSON.stringify(legacy[field]) !== JSON.stringify(grammar[field])) {
-      errors.push(`${field} differs between package.json and tree-sitter.json`);
+    if (JSON.stringify(l[field]) !== JSON.stringify(g[field])) {
+      errors.push(`${g.name}.${field} differs between package.json and tree-sitter.json`);
     }
+  }
+  if ((l.path || ".") !== (g.path || ".")) {
+    errors.push(`${g.name}.path differs between package.json and tree-sitter.json`);
   }
 }
 

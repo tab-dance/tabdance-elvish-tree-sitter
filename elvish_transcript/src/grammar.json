@@ -1,0 +1,167 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/grammar.schema.json",
+  "name": "elvish_transcript",
+  "rules": {
+    "source_file": {
+      "type": "REPEAT",
+      "content": {
+        "type": "SYMBOL",
+        "name": "_line"
+      }
+    },
+    "_line": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "heading"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "directive"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "comment"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "interaction"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "output"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_blank_line"
+        }
+      ]
+    },
+    "_blank_line": {
+      "type": "PATTERN",
+      "value": "\\r?\\n"
+    },
+    "heading": {
+      "type": "SYMBOL",
+      "name": "_heading_line"
+    },
+    "comment": {
+      "type": "SYMBOL",
+      "name": "_comment_line"
+    },
+    "directive": {
+      "type": "SYMBOL",
+      "name": "_directive_line"
+    },
+    "interaction": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "prompt_line"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "continuation_line"
+          }
+        }
+      ]
+    },
+    "prompt_line": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "prompt"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "code"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "PATTERN",
+          "value": "\\r?\\n"
+        }
+      ]
+    },
+    "continuation_line": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "continuation_prefix"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "code"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "PATTERN",
+          "value": "\\r?\\n"
+        }
+      ]
+    },
+    "code": {
+      "type": "IMMEDIATE_TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "[^\\r\\n]+"
+      }
+    },
+    "output": {
+      "type": "SYMBOL",
+      "name": "_output_line"
+    }
+  },
+  "extras": [],
+  "conflicts": [],
+  "precedences": [],
+  "externals": [
+    {
+      "type": "SYMBOL",
+      "name": "prompt"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "continuation_prefix"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_output_line"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_heading_line"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_comment_line"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_directive_line"
+    }
+  ],
+  "inline": [],
+  "supertypes": [],
+  "reserved": {}
+}

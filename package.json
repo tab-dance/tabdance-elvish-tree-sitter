@@ -1,33 +1,48 @@
 {
   "name": "tree-sitter-elvish",
   "version": "0.0.1",
-  "description": "elvish grammar for tree-sitter",
+  "description": "Elvish and Elvish transcript grammars for tree-sitter",
   "main": "bindings/node",
   "types": "bindings/node",
   "keywords": [
     "parsing",
     "incremental",
     "elvish",
+    "elvish-transcript",
     "tree-sitter"
   ],
   "files": [
-    "grammar.js",
+    "elvish/grammar.js",
+    "elvish_transcript/grammar.js",
     "tree-sitter.json",
     "binding.gyp",
     "prebuilds/**",
     "bindings/node/*",
-    "queries/*",
-    "src/**"
+    "elvish/queries/*",
+    "elvish_transcript/queries/*",
+    "elvish/src/**",
+    "elvish_transcript/src/**"
   ],
   "tree-sitter": [
     {
       "scope": "source.elvish",
+      "path": "elvish",
       "file-types": [
         "elv"
       ],
       "highlights": "queries/highlights.scm",
       "injections": "queries/injections.scm",
       "injection-regex": "^elvish$"
+    },
+    {
+      "scope": "source.elvish-transcript",
+      "path": "elvish_transcript",
+      "file-types": [
+        "elvts"
+      ],
+      "highlights": "queries/highlights.scm",
+      "injections": "queries/injections.scm",
+      "injection-regex": "^(elvish-transcript|elvts)$"
     }
   ],
   "dependencies": {
@@ -40,9 +55,10 @@
   },
   "scripts": {
     "install": "node-gyp-build",
-    "test": "tree-sitter test",
+    "test": "node scripts/test-all.mjs",
     "test:node": "node --test bindings/node/binding_test.js",
-    "check:metadata": "node scripts/check-metadata.mjs"
+    "check:metadata": "node scripts/check-metadata.mjs",
+    "check:queries": "node scripts/check-queries.mjs"
   },
   "license": "0BSD",
   "repository": {

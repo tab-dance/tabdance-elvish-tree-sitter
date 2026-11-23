@@ -1,0 +1,157 @@
+===
+Simple interaction
+===
+
+~> echo foo
+foo
+
+---
+
+(source_file
+  (interaction
+    (prompt_line
+      (prompt)
+      (code)))
+  (output))
+
+===
+Continuation
+===
+
+~> echo lorem
+   echo ipsum
+lorem
+ipsum
+
+---
+
+(source_file
+  (interaction
+    (prompt_line
+      (prompt)
+      (code))
+    (continuation_line
+      (continuation_prefix)
+      (code)))
+  (output)
+  (output))
+
+===
+Headings and directives
+===
+
+//each:in-temp-dir
+
+# h1 #
+
+## h2 ##
+
+### h3 ###
+
+~> put x
+▶ x
+
+---
+
+(source_file
+  (directive)
+  (heading)
+  (heading)
+  (heading)
+  (interaction
+    (prompt_line
+      (prompt)
+      (code)))
+  (output))
+
+===
+Comments
+===
+
+// comment
+////
+~> true
+
+---
+
+(source_file
+  (comment)
+  (comment)
+  (interaction
+    (prompt_line
+      (prompt)
+      (code))))
+
+===
+Indented output
+===
+
+~> printf "%5.3s\n" 3.1415
+  3.1
+
+---
+
+(source_file
+  (interaction
+    (prompt_line
+      (prompt)
+      (code)))
+  (output))
+
+===
+Hash output is not a transcript heading
+===
+
+~> md:show "#h1 heading\n"
+#h1 heading
+
+---
+
+(source_file
+  (interaction
+    (prompt_line
+      (prompt)
+      (code)))
+  (output))
+
+===
+Non-tilde prompts
+===
+
+~/foo> echo foo
+foo
+/opt/bar> echo bar
+bar
+
+---
+
+(source_file
+  (interaction
+    (prompt_line
+      (prompt)
+      (code)))
+  (output)
+  (interaction
+    (prompt_line
+      (prompt)
+      (code)))
+  (output))
+
+===
+Directive at session start
+===
+
+//only-on unix
+//in-temp-dir
+
+~> true
+
+---
+
+(source_file
+  (directive)
+  (directive)
+  (interaction
+    (prompt_line
+      (prompt)
+      (code))))

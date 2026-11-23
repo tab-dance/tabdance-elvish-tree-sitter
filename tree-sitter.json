@@ -6,6 +6,7 @@
       "camelcase": "Elvish",
       "title": "Elvish",
       "scope": "source.elvish",
+      "path": "elvish",
       "file-types": [
         "elv"
       ],
@@ -13,12 +14,26 @@
       "injections": "queries/injections.scm",
       "injection-regex": "^elvish$",
       "class-name": "TreeSitterElvish"
+    },
+    {
+      "name": "elvish_transcript",
+      "camelcase": "ElvishTranscript",
+      "title": "Elvish Transcript",
+      "scope": "source.elvish-transcript",
+      "path": "elvish_transcript",
+      "file-types": [
+        "elvts"
+      ],
+      "highlights": "queries/highlights.scm",
+      "injections": "queries/injections.scm",
+      "injection-regex": "^(elvish-transcript|elvts)$",
+      "class-name": "TreeSitterElvishTranscript"
     }
   ],
   "metadata": {
     "version": "0.0.1",
     "license": "0BSD",
-    "description": "Elvish grammar for tree-sitter",
+    "description": "Elvish and Elvish transcript grammars for tree-sitter",
     "links": {
       "repository": "https://github.com/tab-dance/tree-sitter-elvish"
     }

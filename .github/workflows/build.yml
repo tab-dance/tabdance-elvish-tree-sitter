@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: 0BSD
 name: Build
 
 on:
@@ -26,15 +27,16 @@ jobs:
 
       - name: Verify parser generation is up to date
         run: |
-          npx tree-sitter generate --abi 14
-          if ! git diff --quiet -- src/parser.c src/grammar.json src/node-types.json; then
-            echo "Generated parser files are out of date. Run: npx tree-sitter generate --abi 14"
-            git --no-pager diff -- src/parser.c src/grammar.json src/node-types.json
+          npx tree-sitter generate --abi 14 elvish/grammar.js -o elvish/src
+          npx tree-sitter generate --abi 14 elvish_transcript/grammar.js -o elvish_transcript/src
+          if ! git diff --quiet -- elvish/src elvish_transcript/src; then
+            echo "Generated parser files are out of date. Run generate for both grammars."
+            git --no-pager diff -- elvish/src elvish_transcript/src
             exit 1
           fi
 
       - name: Run tree-sitter tests
-        run: npx tree-sitter test
+        run: npm test
 
       - name: Validate package metadata
         run: node scripts/check-metadata.mjs

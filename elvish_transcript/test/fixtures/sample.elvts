@@ -1,0 +1,8 @@
+//each:in-temp-dir
+
+# heading #
+
+~> echo foo
+   echo bar
+foo
+bar

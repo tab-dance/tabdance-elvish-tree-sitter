@@ -7,12 +7,14 @@
         "<!(node -p \"require('node-addon-api').targets\"):node_addon_api_except",
       ],
       "include_dirs": [
-        "src",
+        "elvish/src",
       ],
       "sources": [
         "bindings/node/binding.cc",
-        "src/parser.c",
-        "src/scanner.c",
+        "elvish/src/parser.c",
+        "elvish/src/scanner.c",
+        "elvish_transcript/src/parser.c",
+        "elvish_transcript/src/scanner.c",
       ],
       "conditions": [
         ["OS!='win'", {

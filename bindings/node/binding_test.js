@@ -4,6 +4,7 @@ const { test } = require("node:test");
 
 const Parser = require("tree-sitter");
 const elvish = require(".");
+const elvishTranscript = require(".").elvish_transcript;
 
 test("can load grammar", () => {
   const parser = new Parser();
@@ -34,4 +35,12 @@ test("parses empty braced list elements", () => {
     bracedList.namedChildren.map((child) => child.type),
     ["bareword", "empty_element", "bareword"],
   );
+});
+
+test("can parse elvish transcript", () => {
+  const parser = new Parser();
+  parser.setLanguage(elvishTranscript);
+  const tree = parser.parse("~> echo hello\nhello\n");
+  assert.equal(tree.rootNode.type, "source_file");
+  assert.equal(tree.rootNode.hasError, false);
 });
