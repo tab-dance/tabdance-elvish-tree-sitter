@@ -156,6 +156,8 @@ committed; do not hand-edit them. Corpus tests in `elvish/test/corpus/` and
 | --- | --- |
 | `elvish/queries/highlights.scm` | Elvish syntax highlighting |
 | `elvish/queries/injections.scm` | Elvish injections (currently none) |
+| `elvish/queries/textobjects.scm` | Helix/tree-sitter textobjects (functions, parameters, comments, map entries) |
+| `elvish/queries/indents.scm` | Helix/tree-sitter indentation hints |
 | `elvish_transcript/queries/highlights.scm` | Transcript prompts/headings/comments/directives/output |
 | `elvish_transcript/queries/injections.scm` | Injects `elvish` into transcript `code` nodes |
 

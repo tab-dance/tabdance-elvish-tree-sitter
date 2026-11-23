@@ -30,7 +30,12 @@ try {
   run(["npx", "tree-sitter", "build", "elvish", "-o", elvishLib]);
 
   const fixture = path.join(root, "elvish/test/queries/highlights.elv");
-  for (const q of ["elvish/queries/highlights.scm", "elvish/queries/injections.scm"]) {
+  for (const q of [
+    "elvish/queries/highlights.scm",
+    "elvish/queries/injections.scm",
+    "elvish/queries/textobjects.scm",
+    "elvish/queries/indents.scm",
+  ]) {
     run([
       "npx", "tree-sitter", "query", "-q", q, fixture,
       "--lib-path", elvishLib, "--lang-name", "elvish",
