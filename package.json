@@ -1,5 +1,5 @@
 {
-  "name": "tree-sitter-elvish",
+  "name": "tabdance-elvish-tree-sitter",
   "version": "0.0.1",
   "description": "Elvish and Elvish transcript grammars for tree-sitter",
   "main": "bindings/node",
@@ -63,6 +63,6 @@
   "license": "0BSD",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tab-dance/tree-sitter-elvish.git"
+    "url": "https://github.com/tab-dance/tabdance-elvish-tree-sitter.git"
   }
 }

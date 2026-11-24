@@ -20,7 +20,7 @@ function run(args, options = {}) {
   if (p.status !== 0) process.exit(p.status ?? 1);
 }
 
-const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "tree-sitter-elvish-"));
+const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "tabdance-elvish-tree-sitter-"));
 try {
   for (const grammar of grammars) {
     const lib = path.join(tmp, `${grammar}.so`);

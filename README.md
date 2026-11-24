@@ -1,5 +1,5 @@
-tree-sitter-elvish
-================
+tabdance-elvish-tree-sitter
+===========================
 
 [Elvish](https://elv.sh) and Elvish transcript grammars for
 [tree-sitter](https://github.com/tree-sitter/tree-sitter).
@@ -98,8 +98,8 @@ Put query files in `runtime/queries/elvish/` and
 
 ```js
 const Parser = require("tree-sitter");
-const Elvish = require("tree-sitter-elvish");
-const ElvishTranscript = require("tree-sitter-elvish").elvish_transcript;
+const Elvish = require("tabdance-elvish-tree-sitter");
+const ElvishTranscript = require("tabdance-elvish-tree-sitter").elvish_transcript;
 
 const parser = new Parser();
 parser.setLanguage(Elvish);
@@ -114,12 +114,12 @@ console.log(parser.parse("~> echo hello\nhello\n").rootNode.toString());
 ```rust
 let mut parser = tree_sitter::Parser::new();
 parser
-    .set_language(&tree_sitter_elvish::LANGUAGE_ELVISH.into())
+    .set_language(&tabdance_elvish_tree_sitter::LANGUAGE_ELVISH.into())
     .expect("Error loading Elvish grammar");
 
 let mut transcript_parser = tree_sitter::Parser::new();
 transcript_parser
-    .set_language(&tree_sitter_elvish::LANGUAGE_ELVISH_TRANSCRIPT.into())
+    .set_language(&tabdance_elvish_tree_sitter::LANGUAGE_ELVISH_TRANSCRIPT.into())
     .expect("Error loading Elvish transcript grammar");
 ```
 

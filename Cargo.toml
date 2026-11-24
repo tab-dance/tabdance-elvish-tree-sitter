@@ -1,10 +1,10 @@
 [package]
-name = "tree-sitter-elvish"
+name = "tabdance-elvish-tree-sitter"
 description = "Elvish and Elvish transcript grammars for the tree-sitter parsing library"
 version = "0.0.1"
 keywords = ["incremental", "parsing", "elvish", "elvish-transcript"]
 categories = ["parsing", "text-editors"]
-repository = "https://github.com/tab-dance/tree-sitter-elvish"
+repository = "https://github.com/tab-dance/tabdance-elvish-tree-sitter"
 edition = "2018"
 license = "0BSD"
 

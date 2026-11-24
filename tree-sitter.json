@@ -35,7 +35,7 @@
     "license": "0BSD",
     "description": "Elvish and Elvish transcript grammars for tree-sitter",
     "links": {
-      "repository": "https://github.com/tab-dance/tree-sitter-elvish"
+      "repository": "https://github.com/tab-dance/tabdance-elvish-tree-sitter"
     }
   },
   "bindings": {
