@@ -1,0 +1,38 @@
+# SPDX-License-Identifier: 0BSD
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Set release version
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          sed -i "s/0.0.0-PLACEHOLDER/${VERSION}/g" Cargo.toml package.json tree-sitter.json
+
+      - name: Validate package metadata
+        run: node scripts/check-metadata.mjs
+
+      - name: Publish crate
+        run: cargo publish --allow-dirty --token ${CRATES_TOKEN}
+        env:
+          CRATES_TOKEN: ${{ secrets.CRATES_TOKEN }}

@@ -31,7 +31,7 @@
     }
   ],
   "metadata": {
-    "version": "0.0.1",
+    "version": "0.0.0-PLACEHOLDER",
     "license": "0BSD",
     "description": "Elvish and Elvish transcript grammars for tree-sitter",
     "links": {
