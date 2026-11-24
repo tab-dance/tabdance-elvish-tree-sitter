@@ -1,6 +1,6 @@
 {
   "name": "tabdance-elvish-tree-sitter",
-  "version": "0.0.1",
+  "version": "0.0.0-PLACEHOLDER",
   "description": "Elvish and Elvish transcript grammars for tree-sitter",
   "main": "bindings/node",
   "types": "bindings/node",
