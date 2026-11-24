@@ -178,6 +178,10 @@
         {
           "type": "SYMBOL",
           "name": "wildcard"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "tilde"
         }
       ]
     },
@@ -225,6 +229,10 @@
               {
                 "type": "SYMBOL",
                 "name": "indexing"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "tilde"
               }
             ]
           },
@@ -343,7 +351,7 @@
                     "type": "IMMEDIATE_TOKEN",
                     "content": {
                       "type": "PATTERN",
-                      "value": "(?:[\\p{L}\\p{N}!%+,./:@\\\\_~=-]|[^\\x00-\\x7F])+"
+                      "value": "(?:[\\p{L}\\p{N}!%+,./:@\\\\_=-]|[^\\x00-\\x7F])(?:[\\p{L}\\p{N}!%+,./:@\\\\_~=-]|[^\\x00-\\x7F])*"
                     }
                   },
                   "named": true,
@@ -389,7 +397,7 @@
                 "type": "IMMEDIATE_TOKEN",
                 "content": {
                   "type": "PATTERN",
-                  "value": "(?:[\\p{L}\\p{N}_:~-]|[^\\x00-\\x7F])+"
+                  "value": "(?:[\\p{L}\\p{N}_:-]|[^\\x00-\\x7F])(?:[\\p{L}\\p{N}_:~-]|[^\\x00-\\x7F])*"
                 }
               },
               "named": true,
@@ -715,7 +723,7 @@
     },
     "identifier": {
       "type": "PATTERN",
-      "value": "(?:[\\p{L}\\p{N}_:~-]|[^\\x00-\\x7F])+"
+      "value": "(?:[\\p{L}\\p{N}_:-]|[^\\x00-\\x7F])(?:[\\p{L}\\p{N}_:~-]|[^\\x00-\\x7F])*"
     },
     "import": {
       "type": "SEQ",
@@ -816,6 +824,14 @@
               {
                 "type": "SYMBOL",
                 "name": "wildcard"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "tilde"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "compound"
               },
               {
                 "type": "SYMBOL",
@@ -1885,17 +1901,8 @@
               "type": "SEQ",
               "members": [
                 {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "catch"
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "except"
-                    }
-                  ]
+                  "type": "SYMBOL",
+                  "name": "catch"
                 },
                 {
                   "type": "CHOICE",
@@ -1936,81 +1943,6 @@
         {
           "type": "STRING",
           "value": "catch"
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "FIELD",
-              "name": "exception",
-              "content": {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "SYMBOL",
-                    "name": "identifier"
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "string"
-                  },
-                  {
-                    "type": "SYMBOL",
-                    "name": "variable"
-                  }
-                ]
-              }
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        },
-        {
-          "type": "STRING",
-          "value": "{"
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "REPEAT",
-              "content": {
-                "type": "SYMBOL",
-                "name": "_terminator"
-              }
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "ALIAS",
-                  "content": {
-                    "type": "SYMBOL",
-                    "name": "_statements"
-                  },
-                  "named": true,
-                  "value": "chunk"
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "STRING",
-          "value": "}"
-        }
-      ]
-    },
-    "except": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "except"
         },
         {
           "type": "CHOICE",
@@ -2353,7 +2285,7 @@
                   },
                   {
                     "type": "PATTERN",
-                    "value": "(?:[\\p{L}\\p{N}_:~-]|[^\\x00-\\x7F])+"
+                    "value": "(?:[\\p{L}\\p{N}_:-]|[^\\x00-\\x7F])(?:[\\p{L}\\p{N}_:~-]|[^\\x00-\\x7F])*"
                   }
                 ]
               }
@@ -2448,7 +2380,7 @@
               },
               {
                 "type": "PATTERN",
-                "value": "(?:[\\p{L}\\p{N}_:~-]|[^\\x00-\\x7F])+"
+                "value": "(?:[\\p{L}\\p{N}_:-]|[^\\x00-\\x7F])(?:[\\p{L}\\p{N}_:~-]|[^\\x00-\\x7F])*"
               }
             ]
           }
@@ -2603,7 +2535,7 @@
             "type": "IMMEDIATE_TOKEN",
             "content": {
               "type": "PATTERN",
-              "value": "(?:[\\p{L}\\p{N}_:~-]|[^\\x00-\\x7F])+"
+              "value": "(?:[\\p{L}\\p{N}_:-]|[^\\x00-\\x7F])(?:[\\p{L}\\p{N}_:~-]|[^\\x00-\\x7F])*"
             }
           },
           "named": true,
@@ -2665,7 +2597,7 @@
             "type": "IMMEDIATE_TOKEN",
             "content": {
               "type": "PATTERN",
-              "value": "(?:[\\p{L}\\p{N}!%+,./:@\\\\_~-]|[^\\x00-\\x7F])+"
+              "value": "(?:[\\p{L}\\p{N}!%+,./:@\\\\_-]|[^\\x00-\\x7F])(?:[\\p{L}\\p{N}!%+,./:@\\\\_~-]|[^\\x00-\\x7F])*"
             }
           },
           "named": true,
@@ -2830,6 +2762,10 @@
               {
                 "type": "SYMBOL",
                 "name": "wildcard"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "tilde"
               }
             ]
           },
@@ -3001,6 +2937,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "tilde"
+        },
+        {
+          "type": "SYMBOL",
           "name": "list"
         },
         {
@@ -3067,6 +3007,10 @@
                 },
                 "named": true,
                 "value": "indexing"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "tilde"
               }
             ]
           },
@@ -3185,7 +3129,7 @@
                     "type": "IMMEDIATE_TOKEN",
                     "content": {
                       "type": "PATTERN",
-                      "value": "(?:[\\p{L}\\p{N}!%+./:@\\\\_~=-]|[^\\x00-\\x7F])+"
+                      "value": "(?:[\\p{L}\\p{N}!%+./:@\\\\_=-]|[^\\x00-\\x7F])(?:[\\p{L}\\p{N}!%+./:@\\\\_~=-]|[^\\x00-\\x7F])*"
                     }
                   },
                   "named": true,
@@ -3250,6 +3194,10 @@
               {
                 "type": "SYMBOL",
                 "name": "wildcard"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "tilde"
               }
             ]
           },
@@ -3289,7 +3237,7 @@
     },
     "_braced_bareword": {
       "type": "PATTERN",
-      "value": "(?:[\\p{L}\\p{N}!%+./:@\\\\_~=-]|[^\\x00-\\x7F])+"
+      "value": "(?:[\\p{L}\\p{N}!%+./:@\\\\_=-]|[^\\x00-\\x7F])(?:[\\p{L}\\p{N}!%+./:@\\\\_~=-]|[^\\x00-\\x7F])*"
     },
     "output_capture": {
       "type": "SEQ",
@@ -3408,6 +3356,10 @@
           ]
         }
       ]
+    },
+    "tilde": {
+      "type": "STRING",
+      "value": "~"
     },
     "number": {
       "type": "TOKEN",
@@ -3819,7 +3771,7 @@
     },
     "bareword": {
       "type": "PATTERN",
-      "value": "(?:[\\p{L}\\p{N}!%+,./:@\\\\_~=-]|[^\\x00-\\x7F])+"
+      "value": "(?:[\\p{L}\\p{N}!%+,./:@\\\\_=-]|[^\\x00-\\x7F])(?:[\\p{L}\\p{N}!%+,./:@\\\\_~=-]|[^\\x00-\\x7F])*"
     },
     "cmd_bareword": {
       "type": "TOKEN",
