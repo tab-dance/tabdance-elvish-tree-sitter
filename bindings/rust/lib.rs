@@ -5,7 +5,7 @@
 //! let code = "echo hello\n";
 //! let mut parser = tree_sitter::Parser::new();
 //! parser
-//!     .set_language(&tree_sitter_elvish::LANGUAGE_ELVISH.into())
+//!     .set_language(&tabdance_elvish_tree_sitter::LANGUAGE_ELVISH.into())
 //!     .expect("Error loading elvish grammar");
 //! let tree = parser.parse(code, None).unwrap();
 //! assert!(!tree.root_node().has_error());

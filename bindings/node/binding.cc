@@ -33,4 +33,4 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
   return exports;
 }
 
-NODE_API_MODULE(tree_sitter_elvish_binding, Init)
+NODE_API_MODULE(tabdance_elvish_tree_sitter_binding, Init)

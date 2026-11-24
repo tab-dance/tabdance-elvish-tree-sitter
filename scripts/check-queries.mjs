@@ -24,7 +24,7 @@ function run(args, options = {}) {
   return p.stdout || "";
 }
 
-const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "tree-sitter-elvish-q-"));
+const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "tabdance-elvish-tree-sitter-q-"));
 try {
   const elvishLib = path.join(tmp, "elvish.so");
   run(["npx", "tree-sitter", "build", "elvish", "-o", elvishLib]);

@@ -3,7 +3,7 @@ const root = require("path").join(__dirname, "..", "..");
 
 const binding =
   typeof process.versions.bun === "string"
-    ? require(`../../prebuilds/${process.platform}-${process.arch}/tree-sitter-elvish.node`)
+    ? require(`../../prebuilds/${process.platform}-${process.arch}/tabdance-elvish-tree-sitter.node`)
     : require("node-gyp-build")(root);
 
 const elvish = binding.elvish;
