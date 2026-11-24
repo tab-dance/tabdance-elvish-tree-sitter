@@ -71,14 +71,14 @@ Top level:
 
 Statements (`_statement`) are: `command`, `if` (with `elif`/`else`), `while`, `for`, `try` (with `catch`/`else`/`finally`), `import`, `function_definition`, `variable_declaration`, `variable_assignment`, `temporary_assignment`, `variable_deletion`, and `pipeline`. A bare lambda parses as a `command` whose head is a lambda. Order matters for ambiguity resolution.
 
-Expressions are literals, `variable`, `output_capture`, `exception_capture`, `braced_list`, `indexing`, `lambda`, and `wildcard`.
+Expressions are literals, `variable`, `output_capture`, `exception_capture`, `braced_list`, `indexing`, `lambda`, `wildcard`, and `tilde`.
 
 Conventions used throughout:
 
 - Use `field(...)` for semantically important children: `head`/`argument` on commands, `condition`, `var`/`container`, `exception`, `parameter`, `key`/`value`, `lhs`/`rhs`, `indices`, and `file`.
 - Use `alias(...)` to give externally meaningful names to inline constructs, e.g. `_statements` → `chunk`, `repeat1(...)` → `lhs`/`rhs`/`indices`, and `bareword` → `file` in redirections.
 - Use `token.immediate(...)` when a following `[` must not be preceded by whitespace (indexing and wildcard modifiers).
-- `identifier` allows letters/numbers, `_ : ~ -`, and any non-ASCII character, matching Elvish's rule that any printable non-ASCII rune is allowed. Elvish namespaces and function markers like `edit:location` and `nop~` are single identifiers.
+- `identifier` allows letters/numbers, `_ : -`, `~` after the first character, and any non-ASCII character, matching Elvish's rule that any printable non-ASCII rune is allowed. Elvish namespaces and function markers like `edit:location` and `nop~` are single identifiers. Tilde at expression start is parsed as a `tilde` node for fidelity with Elvish's parser.
 - `bareword` is the separate token for unquoted arguments (`/usr/local/bin`, `a.txt`, `7of9`) and also allows non-ASCII characters. `cmd_bareword` additionally allows `<`, `>`, `*`, and `^` in command position, matching Elvish's `CmdExpr` context.
 - Keywords (`if`, `else`, `var`, `fn`, ...) are literal strings in the grammar, not identifier aliases.
 

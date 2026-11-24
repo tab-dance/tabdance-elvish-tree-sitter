@@ -15,7 +15,6 @@
 
 (try "try" @exception)
 (try (catch "catch" @exception))
-(try (except "except" @exception))
 (try (else "else" @exception))
 (try (finally "finally" @exception))
 
@@ -24,6 +23,7 @@
 (import (string) @string.special)
 
 (wildcard) @string.special
+(tilde) @string.special
 
 (command argument: (bareword) @parameter)
 (command head: (bareword) @function)
@@ -32,6 +32,8 @@
  (#eq? @keyword.return "return"))
 ((command (identifier) @keyword.operator)
  (#any-of? @keyword.operator "and" "or" "coalesce"))
+((command head: (identifier) @keyword)
+ (#eq? @keyword "pragma"))
 ((command head: _ @function)
  (#any-of? @function
   "+" "-" "*" "/" "%" "<" "<=""==" "!=" ">"

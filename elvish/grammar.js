@@ -78,7 +78,8 @@ module.exports = grammar({
       $.braced_list,
       $.indexing,
       $.lambda,
-      $.wildcard
+      $.wildcard,
+      $.tilde
     ),
 
     compound: $ => prec.left(seq(
@@ -92,6 +93,7 @@ module.exports = grammar({
         $.lambda,
         $.wildcard,
         $.indexing,
+        $.tilde,
       ),
       repeat1(choice(
         alias($.immediate_variable, $.variable),
@@ -102,7 +104,7 @@ module.exports = grammar({
         alias($.immediate_wildcard, $.wildcard),
         alias(token.immediate(seq("'", /([^']|'')*/, "'")), $.string),
         alias(token.immediate(seq('"', /([^"\\]|\\.)*/, '"')), $.string),
-        alias(token.immediate(/(?:[\p{L}\p{N}!%+,./:@\\_~=-]|[^\x00-\x7F])+/), $.bareword),
+        alias(token.immediate(/(?:[\p{L}\p{N}!%+,./:@\\_=-]|[^\x00-\x7F])(?:[\p{L}\p{N}!%+,./:@\\_~=-]|[^\x00-\x7F])*/), $.bareword),
       ))
     )),
 
@@ -110,7 +112,7 @@ module.exports = grammar({
       token.immediate("$"),
       optional(token.immediate("@")),
       choice(
-        alias(token.immediate(/(?:[\p{L}\p{N}_:~-]|[^\x00-\x7F])+/), $.identifier),
+        alias(token.immediate(/(?:[\p{L}\p{N}_:-]|[^\x00-\x7F])(?:[\p{L}\p{N}_:~-]|[^\x00-\x7F])*/), $.identifier),
         alias(token.immediate(seq("'", /([^']|'')*/, "'")), $.string),
         alias(token.immediate(seq('"', /([^"\\]|\\.)*/, '"')), $.string),
       )
@@ -143,7 +145,7 @@ module.exports = grammar({
 
     _terminator: $ => choice(";", "\n"),
 
-    identifier: $ => /(?:[\p{L}\p{N}_:~-]|[^\x00-\x7F])+/,
+    identifier: $ => /(?:[\p{L}\p{N}_:-]|[^\x00-\x7F])(?:[\p{L}\p{N}_:~-]|[^\x00-\x7F])*/,
 
 
     // ==========
@@ -172,6 +174,8 @@ module.exports = grammar({
         $.braced_list,
         $.lambda,
         $.wildcard,
+        $.tilde,
+        $.compound,
         $.indexing,
       )),
       repeat(choice(
@@ -282,17 +286,12 @@ module.exports = grammar({
 
     try: $ => seq(
       "try", "{", chunk($), "}",
-      optional(seq(choice($.catch, $.except), optional($.else))),
+      optional(seq($.catch, optional($.else))),
       optional($.finally),
     ),
 
     catch: $ => seq(
       "catch", optional(field("exception", choice($.identifier, $.string, $.variable))),
-      "{", chunk($), "}"
-    ),
-
-    except: $ => seq(
-      "except", optional(field("exception", choice($.identifier, $.string, $.variable))),
       "{", chunk($), "}"
     ),
 
@@ -342,7 +341,7 @@ module.exports = grammar({
     ),
 
     _plain_parameter: $ => choice(
-      alias(token(prec(1, seq("@", /(?:[\p{L}\p{N}_:~-]|[^\x00-\x7F])+/))), $.identifier),
+      alias(token(prec(1, seq("@", /(?:[\p{L}\p{N}_:-]|[^\x00-\x7F])(?:[\p{L}\p{N}_:~-]|[^\x00-\x7F])*/))), $.identifier),
       seq(
         optional("@"),
         choice($.identifier, $.bareword, $.string)
@@ -354,7 +353,7 @@ module.exports = grammar({
       choice($.identifier, $.bareword, $.string)
     ),
 
-    _rest_parameter: $ => alias(token(prec(1, seq("@", /(?:[\p{L}\p{N}_:~-]|[^\x00-\x7F])+/))), $.identifier),
+    _rest_parameter: $ => alias(token(prec(1, seq("@", /(?:[\p{L}\p{N}_:-]|[^\x00-\x7F])(?:[\p{L}\p{N}_:~-]|[^\x00-\x7F])*/))), $.identifier),
 
     parameter_option: $ => choice(
       prec(1, seq(
@@ -383,10 +382,10 @@ module.exports = grammar({
     ),
 
     _option_key_part: $ => choice(
-      alias(token.immediate(/(?:[\p{L}\p{N}_:~-]|[^\x00-\x7F])+/), $.identifier),
+      alias(token.immediate(/(?:[\p{L}\p{N}_:-]|[^\x00-\x7F])(?:[\p{L}\p{N}_:~-]|[^\x00-\x7F])*/), $.identifier),
       alias(token.immediate(seq("'", /([^']|'')*/, "'")), $.string),
       alias(token.immediate(seq('"', /([^"\\]|\\.)*/, '"')), $.string),
-      alias(token.immediate(/(?:[\p{L}\p{N}!%+,./:@\\_~-]|[^\x00-\x7F])+/), $.bareword),
+      alias(token.immediate(/(?:[\p{L}\p{N}!%+,./:@\\_-]|[^\x00-\x7F])(?:[\p{L}\p{N}!%+,./:@\\_~-]|[^\x00-\x7F])*/), $.bareword),
     ),
 
     option: $ => seq(
@@ -422,6 +421,7 @@ module.exports = grammar({
         $.braced_list,
         $.lambda,
         $.wildcard,
+        $.tilde,
       ),
       repeat1(seq(
         token.immediate("["),
@@ -459,6 +459,7 @@ module.exports = grammar({
       alias($.braced_indexing, $.indexing),
       $.lambda,
       $.wildcard,
+      $.tilde,
       $.list,
       $.map,
     ),
@@ -475,6 +476,7 @@ module.exports = grammar({
         $.lambda,
         $.wildcard,
         alias($.braced_indexing, $.indexing),
+        $.tilde,
       ),
       repeat1(choice(
         alias($.immediate_variable, $.variable),
@@ -485,7 +487,7 @@ module.exports = grammar({
         alias($.immediate_wildcard, $.wildcard),
         alias(token.immediate(seq("'", /([^']|'')*/, "'")), $.string),
         alias(token.immediate(seq('"', /([^"\\]|\\.)*/, '"')), $.string),
-        alias(token.immediate(/(?:[\p{L}\p{N}!%+./:@\\_~=-]|[^\x00-\x7F])+/), $.bareword),
+        alias(token.immediate(/(?:[\p{L}\p{N}!%+./:@\\_=-]|[^\x00-\x7F])(?:[\p{L}\p{N}!%+./:@\\_~=-]|[^\x00-\x7F])*/), $.bareword),
       ))
     )),
 
@@ -501,6 +503,7 @@ module.exports = grammar({
         $.braced_list,
         $.lambda,
         $.wildcard,
+        $.tilde,
       ),
       repeat1(seq(
         token.immediate("["),
@@ -509,7 +512,7 @@ module.exports = grammar({
       )),
     )),
 
-    _braced_bareword: $ => /(?:[\p{L}\p{N}!%+./:@\\_~=-]|[^\x00-\x7F])+/,
+    _braced_bareword: $ => /(?:[\p{L}\p{N}!%+./:@\\_=-]|[^\x00-\x7F])(?:[\p{L}\p{N}!%+./:@\\_~=-]|[^\x00-\x7F])*/,
 
     output_capture: $ => seq(
       "(", chunk($), ")"
@@ -522,6 +525,8 @@ module.exports = grammar({
     variable: $ => seq(
       "$", optional("@"), choice($.identifier, $.string)
     ),
+
+    tilde: $ => "~",
 
     number: $ => {
       const decimal = /\d(_?\d)*/
@@ -556,7 +561,7 @@ module.exports = grammar({
       seq('"', /([^"\\]|\\.)*/, '"')
     )),
 
-    bareword: $ => /(?:[\p{L}\p{N}!%+,./:@\\_~=-]|[^\x00-\x7F])+/,
+    bareword: $ => /(?:[\p{L}\p{N}!%+,./:@\\_=-]|[^\x00-\x7F])(?:[\p{L}\p{N}!%+,./:@\\_~=-]|[^\x00-\x7F])*/,
 
     // Barewords in command position may also contain <, >, * and ^.
     cmd_bareword: $ => token(prec(1, seq(

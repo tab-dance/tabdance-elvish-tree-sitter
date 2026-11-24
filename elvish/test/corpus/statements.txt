@@ -717,24 +717,6 @@ try { nop } catch $e { nop }
         (command
           (identifier))))))
 
-===
-Try except
-===
-
-try { nop } except e { nop }
-
----
-
-(source_file
-  (try
-    (chunk
-      (command
-        (identifier)))
-    (except
-      (identifier)
-      (chunk
-        (command
-          (identifier))))))
 
 ===
 Function definition with bareword name

@@ -56,6 +56,10 @@
           "named": true
         },
         {
+          "type": "tilde",
+          "named": true
+        },
+        {
           "type": "variable",
           "named": true
         },
@@ -212,6 +216,10 @@
             "named": true
           },
           {
+            "type": "tilde",
+            "named": true
+          },
+          {
             "type": "variable",
             "named": true
           },
@@ -231,6 +239,10 @@
           },
           {
             "type": "braced_list",
+            "named": true
+          },
+          {
+            "type": "compound",
             "named": true
           },
           {
@@ -267,6 +279,10 @@
           },
           {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "tilde",
             "named": true
           },
           {
@@ -336,6 +352,10 @@
           "named": true
         },
         {
+          "type": "tilde",
+          "named": true
+        },
+        {
           "type": "variable",
           "named": true
         },
@@ -399,6 +419,10 @@
             "named": true
           },
           {
+            "type": "tilde",
+            "named": true
+          },
+          {
             "type": "variable",
             "named": true
           },
@@ -424,40 +448,6 @@
     "type": "else",
     "named": true,
     "fields": {},
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "chunk",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "except",
-    "named": true,
-    "fields": {
-      "exception": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "string",
-            "named": true
-          },
-          {
-            "type": "variable",
-            "named": true
-          }
-        ]
-      }
-    },
     "children": {
       "multiple": false,
       "required": false,
@@ -549,6 +539,10 @@
           },
           {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "tilde",
             "named": true
           },
           {
@@ -682,6 +676,10 @@
             "named": true
           },
           {
+            "type": "tilde",
+            "named": true
+          },
+          {
             "type": "variable",
             "named": true
           },
@@ -768,6 +766,10 @@
           "named": true
         },
         {
+          "type": "tilde",
+          "named": true
+        },
+        {
           "type": "variable",
           "named": true
         },
@@ -824,6 +826,10 @@
         },
         {
           "type": "string",
+          "named": true
+        },
+        {
+          "type": "tilde",
           "named": true
         },
         {
@@ -887,6 +893,10 @@
         },
         {
           "type": "string",
+          "named": true
+        },
+        {
+          "type": "tilde",
           "named": true
         },
         {
@@ -980,6 +990,10 @@
           "named": true
         },
         {
+          "type": "tilde",
+          "named": true
+        },
+        {
           "type": "variable",
           "named": true
         },
@@ -1040,6 +1054,10 @@
         },
         {
           "type": "string",
+          "named": true
+        },
+        {
+          "type": "tilde",
           "named": true
         },
         {
@@ -1128,6 +1146,10 @@
           },
           {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "tilde",
             "named": true
           },
           {
@@ -1247,6 +1269,10 @@
             "named": true
           },
           {
+            "type": "tilde",
+            "named": true
+          },
+          {
             "type": "variable",
             "named": true
           },
@@ -1358,6 +1384,10 @@
             "named": true
           },
           {
+            "type": "tilde",
+            "named": true
+          },
+          {
             "type": "variable",
             "named": true
           },
@@ -1433,6 +1463,10 @@
         },
         {
           "type": "string",
+          "named": true
+        },
+        {
+          "type": "tilde",
           "named": true
         },
         {
@@ -1543,10 +1577,6 @@
         },
         {
           "type": "else",
-          "named": true
-        },
-        {
-          "type": "except",
           "named": true
         },
         {
@@ -1674,6 +1704,10 @@
           "named": true
         },
         {
+          "type": "tilde",
+          "named": true
+        },
+        {
           "type": "variable",
           "named": true
         },
@@ -1734,6 +1768,10 @@
           },
           {
             "type": "string",
+            "named": true
+          },
+          {
+            "type": "tilde",
             "named": true
           },
           {
@@ -1865,10 +1903,6 @@
     "named": true
   },
   {
-    "type": "except",
-    "named": false
-  },
-  {
     "type": "finally",
     "named": false
   },
@@ -1902,6 +1936,10 @@
   },
   {
     "type": "string",
+    "named": true
+  },
+  {
+    "type": "tilde",
     "named": true
   },
   {

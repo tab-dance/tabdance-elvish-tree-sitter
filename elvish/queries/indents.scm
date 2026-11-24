@@ -9,7 +9,6 @@
   (for)
   (try)
   (catch)
-  (except)
   (finally)
   (list)
   (map)
@@ -26,6 +25,5 @@
   "elif"
   "else"
   "catch"
-  "except"
   "finally"
 ] @outdent

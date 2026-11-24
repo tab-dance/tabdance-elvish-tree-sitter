@@ -463,3 +463,25 @@ nop {|&o=|nop} {|&o= |nop} {|&o= x|nop} {|&o= &p=|nop} {|&o= &p=1 x|nop} {|&o= @
       (chunk
         (command
           (identifier))))))
+
+===
+Tilde
+===
+
+~ ~user ~/foo ~'a b'/c
+
+---
+
+(source_file
+  (command
+    (tilde)
+    (compound
+      (tilde)
+      (bareword))
+    (compound
+      (tilde)
+      (bareword))
+    (compound
+      (tilde)
+      (string)
+      (bareword))))
